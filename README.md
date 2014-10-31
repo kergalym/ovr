@@ -13,4 +13,4 @@ Please read https://wiki.gentoo.org/wiki/Layman for more information regarding l
 
 ### Add it using layman:
 
-      layman -f -o http://github.com/kergalym/ovr/repositories.xml -a kergalym
+      layman -f -o http://github.com/kergalym/ovr/repositories.xml -a ovr
