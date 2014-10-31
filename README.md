@@ -11,4 +11,4 @@ Installing
 Please read https://wiki.gentoo.org/wiki/Layman for more information regarding layman.
 Add it using layman:
 
-layman -f -o http://github.com/kergalym/ovr/repositories.xml -a anders-larsson
+layman -f -o http://github.com/kergalym/ovr/repositories.xml -a kergalym
