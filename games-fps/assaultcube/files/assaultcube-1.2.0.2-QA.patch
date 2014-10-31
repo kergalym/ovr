@@ -1,0 +1,8 @@
+--- AssaultCube_v1.2.0.2/source/src/Makefile	2013-11-10 00:12:11.000000000 +0100
++++ AssaultCube_v1.2.0.2/source/src/Makefile	2013-11-12 09:20:49.637461002 +0100
+@@ -1,4 +1,4 @@
+-CXXFLAGS= -O3 -fomit-frame-pointer
++CXXFLAGS= $(EXTRA_CXXFLAGS) -fomit-frame-pointer
+ CXX=clang++	# Use clang++, as g++ optimizations cause crashes...
+ override CXXFLAGS+= -Wall -fsigned-char
+

@@ -1,0 +1,8 @@
+DEFINED_PHASES=install
+DESCRIPTION=Graphic driver switcher
+EAPI=5
+KEYWORDS=~amd64 ~x86
+LICENSE=GPL-2
+SLOT=0
+_eclasses_=eutils	af81d52c25ec93fbdff71e0efb0de7b7	multilib	fac675dcccf94392371a6abee62d909f	toolchain-funcs	48b38a216afb92db6314d6c3187abea3
+_md5_=580f9a820b456fc959d69be68a7a0ec8

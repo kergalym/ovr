@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=DrvConf
+Name[ru]=DrvConf
+Comment=Configure Graphic Drivers
+Comment[ru]=Настройка графических драйверов
+Type=Application
+Exec=drvconf
+TryExec=/usr/bin/drvconf
+Icon=xorg
+Categories=Qt;Settings;DesktopSettings;
+

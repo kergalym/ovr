@@ -1,0 +1,12 @@
+DEFINED_PHASES=compile install prepare
+DEPEND=>=dev-lang/lua-5.1
+DESCRIPTION=POSIX bindings for Lua
+EAPI=4
+HOMEPAGE=http://git.alpinelinux.org/cgit/luaposix.git
+KEYWORDS=~amd64
+LICENSE=as-is
+RDEPEND=>=dev-lang/lua-5.1
+SLOT=0
+SRC_URI=http://git.alpinelinux.org/cgit/luaposix.git/snapshot/luaposix-5.1.8.tar.bz2
+_eclasses_=eutils	af81d52c25ec93fbdff71e0efb0de7b7	flag-o-matic	9a539029fe1d390c1828ff633baf26b5	multilib	fac675dcccf94392371a6abee62d909f	toolchain-funcs	48b38a216afb92db6314d6c3187abea3
+_md5_=985a5b2428e042c7e0d9fc4f9bffd5a1

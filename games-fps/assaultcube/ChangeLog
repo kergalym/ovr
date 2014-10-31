@@ -1,0 +1,34 @@
+# ChangeLog for games-fps/assaultcube
+# Copyright 1999-2013 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  23 Mar 2013; Julian Ospald <hasufell@gentoo.org> metadata.xml:
+  add server useflag description
+
+  20 Mar 2013; Julian Ospald <hasufell@gentoo.org> assaultcube-1.1.0.4.ebuild,
+  +files/assaultcube-1.1.0.4-QA.patch:
+  rewrite, do proper QA
+
+*assaultcube-1.1.0.4 (18 Mar 2013)
+
+  18 Mar 2013; Patrick Lauer <patrick@gentoo.org> -assaultcube-1.0.4.ebuild,
+  +assaultcube-1.1.0.4.ebuild:
+  [games-fps/assaultcube] Bump, see #162945
+
+  01 Jul 2010; Michał Górny (sedzimir) <mgorny.3ehbo@mailnull.com>
+  assaultcube-1.0.4.ebuild:
+  Adjust 'find' calls to be POSIX-compliant.
+
+  16 May 2010; Michael Weber (xmw) <gentoo@xmw.de> assaultcube-1.0.4.ebuild:
+  Game initialization crashes with net-libs/enet, revert to the bundled
+  version. Remove unneeded autogen folder from documentation.
+
+  12 May 2010; Michael Weber (xmw) <gentoo@xmw.de> assaultcube-1.0.4.ebuild:
+  The enet.patch is only needed for the exact version 1.2 of enet, thanks to
+  Paul Hartman <gentoo@h5n.us> for the report. Corrected typo in passing
+  toolchains CXX to build system.
+
+  01 May 2010; Michael Weber (xmw) <gentoo@xmw.de>
+  +assaultcube-1.0.4.ebuild, +metadata.xml:
+  New Ebuild for bug 162945
+

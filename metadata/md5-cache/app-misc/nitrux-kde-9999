@@ -1,0 +1,13 @@
+DEFINED_PHASES=install
+DEPEND=app-arch/unzip
+DESCRIPTION=nitrux OS icons for KDE
+EAPI=5
+HOMEPAGE=http://nitrux.weebly.com
+IUSE=-minimal
+KEYWORDS=amd64 x86
+LICENSE=CC-BY-NC-ND-4
+RDEPEND=minimal? ( !kde-base/oxygen-icons )
+RESTRICT=binchecks strip
+SLOT=0
+SRC_URI=http://store.nitrux.in/files/NITRUX-KDE.tar.gz
+_md5_=38e05a9fd66be7ee14f047878e23edaa

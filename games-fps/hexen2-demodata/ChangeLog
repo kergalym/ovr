@@ -1,0 +1,35 @@
+# ChangeLog for games-fps/hexen2-demodata
+# Copyright 1999-2010 Gentoo Foundation; Distributed under the GPL v2
+# $Header: $
+
+  11 Jul 2010; Michael Weber (xmw) <gentoo@xmw.de>
+  hexen2-demodata-1.4.3.ebuild:
+  Ebuild cleanup, added amd64 specific SRC_URI
+
+  31 Jan 2010; Markos Chandras <hwoarang@gentoo.org>
+  hexen2-demodata-1.4.3.ebuild:
+  Drop depcreated built_with_use call
+
+  26 Mar 2009; Tiago Cunha <tcunha@gentoo.org> metadata.xml:
+  Fix metadata.xml.
+
+  19 Jan 2009; Thomas Sachau (Tommy[D]) <tommy@gentoo.org>
+  hexen2-demodata-1.4.3.ebuild:
+  Drop emty DEPEND
+
+  06 Apr 2008; Davide Cendron (scen) <scen@gentoo.org>
+  -hexen2-demodata-1.4.2.ebuild, +hexen2-demodata-1.4.3.ebuild:
+  Version bump
+
+  04 Oct 2007; Davide Cendron (scen) <scen@gentoo.org>
+  -hexen2-demodata-1.4.1.ebuild, +hexen2-demodata-1.4.2.ebuild:
+  Version bump
+
+  25 Jul 2007; Davide Cendron (scen) <scen@gentoo.org>
+  hexen2-demodata-1.4.1.ebuild:
+  Added ~ppc keyword
+
+  11 Jun 2007; Davide Cendron (scen) <scen@gentoo.org>
+  +hexen2-demodata-1.4.1.ebuild, +metadata.xml:
+  New Ebuild for bug 139262 thanks to Paul Bredbury
+

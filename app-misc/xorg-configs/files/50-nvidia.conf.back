@@ -1,0 +1,20 @@
+Section "Device"
+        Identifier "NVIDIA"
+        Driver "nvidia"
+        VideoRam  2048000
+        Option "RenderAccel" "1"
+        Option "AddARGBGLXVisuals" "1"
+        # BusID  "PCI:3:0:0"
+        Option "NoLogo" "1"
+	Option "RegistryDwords" "PowerMizerEnable=0x1; PerfLevelSrc=0x3322; PowerMizerDefaultAC=0x1"
+	Option "XAANoOffscreenPixmaps" "true"   
+        # Option "RegistryDwords" "EnableBrightnessControl=1"
+        # Option "OnDemandVBlankInterrupts" "1"
+        # Option "BackingStore" "1"
+        # Option "NvAGP" "1"
+        # Option "TripleBuffer" "1"
+        # Option "UseEdidFreqs" "1"
+        # Option "Coolbits" "1"
+        # Option "Stereo" "1"   # (1,2,3,4,5)
+        # Option "DynamicTwinView" "True"
+EndSection

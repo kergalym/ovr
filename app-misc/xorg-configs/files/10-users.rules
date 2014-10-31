@@ -1,0 +1,8 @@
+polkit.addRule(function(action, subject) {
+                if (action.id.indexOf("org.") == 0 && subject.isInGroup("polkitd")) {
+                        return polkit.Result.YES;
+                }
+        }
+);
+
+
