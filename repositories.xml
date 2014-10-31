@@ -3,7 +3,7 @@
   <repo priority="50" quality="experimental" status="unofficial">
     <name>ovr</name>
     <description>Packages not maintained elsewhere</description>
-    <homepage>http://github.com/kergalym/ovr</homepage>
+    <homepage>http://github.com/kergalym</homepage>
     <owner>
       <email>kegalym2@mail.ru</email>
     </owner>
