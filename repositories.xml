@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <repositories version="1.0">
   <repo priority="50" quality="experimental" status="unofficial">
-    <name>kergalym</name>
+    <name>ovr</name>
     <description>Packages not maintained elsewhere</description>
     <homepage>https://github.com/kergalym/ovr</homepage>
     <owner>
