@@ -11,6 +11,15 @@ This overlay is not official and not available in layman (as an official source)
 
 Please read https://wiki.gentoo.org/wiki/Layman for more information regarding layman.
 
-### Add it using layman:
+### Add it using layman (currently doesn't work):
 
       layman -f -o http://github.com/kergalym/ovr/repositories.xml -a ovr
+
+### Add it manually :
+
+      cd /var/lib/layman
+      git clone https://github.com/kergalym/ovr.git
+
+then add it to your make.conf
+
+
