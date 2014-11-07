@@ -32,7 +32,7 @@
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
         <h1>
-<a name="ovr-overlay-" class="anchor" href="#ovr-overlay-"><span class="octicon octicon-link"></span></a>ovr-overlay </h1>
+<a id="ovr-overlay-" class="anchor" href="#ovr-overlay-" aria-hidden="true"><span class="octicon octicon-link"></span></a>ovr-overlay </h1>
 
 <p>Packages not maintained elsewhere</p>
 
@@ -41,15 +41,24 @@
 <p><strong>Use ebuilds supplied in this repository on your own risk</strong>. They've been tested on my own system setup (~amd64) and (most likely) tested on virtual systems (amd64 and x86).</p>
 
 <h3>
-<a name="installing" class="anchor" href="#installing"><span class="octicon octicon-link"></span></a>Installing</h3>
+<a id="installing" class="anchor" href="#installing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installing</h3>
 
 <p>Please read <a href="https://wiki.gentoo.org/wiki/Layman">https://wiki.gentoo.org/wiki/Layman</a> for more information regarding layman.</p>
 
 <h3>
-<a name="add-it-with-layman" class="anchor" href="#add-it-with-layman"><span class="octicon octicon-link"></span></a>Add it with layman:</h3>
+<a id="add-it-using-layman-currently-doesnt-work" class="anchor" href="#add-it-using-layman-currently-doesnt-work" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add it using layman (currently doesn't work):</h3>
 
 <pre><code>  layman -f -o http://github.com/kergalym/ovr/repositories.xml -a ovr
 </code></pre>
+
+<h3>
+<a id="add-it-manually-" class="anchor" href="#add-it-manually-" aria-hidden="true"><span class="octicon octicon-link"></span></a>Add it manually :</h3>
+
+<pre><code>  cd /var/lib/layman
+  git clone https://github.com/kergalym/ovr.git
+</code></pre>
+
+<p>then add it to your make.conf</p>
       </section>
     </div>
 
