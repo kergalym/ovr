@@ -41,7 +41,7 @@ RDEPEND=">=x11-libs/gtk+-2.10:2
 DEPEND="${RDEPEND}
 	dev-util/intltool
 	virtual/pkgconfig
-	>=dev-lang/vala-0.7.7:0.10"
+	>=dev-lang/vala-0.20.1"
 
 src_unpack() {
 	if [[ ${PV} == "9999" ]]; then
