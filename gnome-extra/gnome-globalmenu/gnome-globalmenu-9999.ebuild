@@ -30,7 +30,7 @@ RDEPEND=">=x11-libs/gtk+-2.10:2
 	>=dev-libs/glib-2.10:2
 	gnome-base/gconf:2
 	>=x11-libs/libwnck-2.16:1
-	>=gnome-base/gnome-menus-2.16:0
+	>=gnome-base/gnome-menus-3.10.1-r1
 	>=x11-libs/libX11-1.1.0
 	gnome? (
 		>=gnome-base/gnome-panel-2.16
