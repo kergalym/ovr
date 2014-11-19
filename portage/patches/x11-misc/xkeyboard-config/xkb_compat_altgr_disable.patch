@@ -1,0 +1,15 @@
+--- usr/share/X11/xkb/compat/basic	2014-04-02 19:19:45.639361723 +0600
++++ usr/share/X11/xkb/compat/basic	2014-04-02 18:58:28.485373853 +0600
+@@ -35,9 +35,9 @@
+ 	action= SetMods(modifiers=modMapMods);
+     };
+ 
+-    group 2 = AltGr;
+-    group 3 = AltGr;
+-    group 4 = AltGr;
++//    group 2 = AltGr;
++//    group 3 = AltGr;
++//    group 4 = AltGr;
+ 
+     include "ledcaps"
+     include "lednum"

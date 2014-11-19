@@ -1,0 +1,12 @@
+=net-print/foo2zjs-99999999 **
+=net-misc/yandex-disk-9999 **
+=x11-misc/primus-9999 **
+=media-sound/oss-9999 **
+=app-emulation/wine-1.7.26 **
+=app-emulation/wine-1.7.24 **
+net-im/myagent-im **
+# required by plasma-globalmenu (argument)
+=kde-misc/plasma-globalmenu-9999 **
+# required by kde-misc/plasma-globalmenu-9999::ovr
+# required by plasma-globalmenu (argument)
+=gnome-extra/gnome-globalmenu-9999 **

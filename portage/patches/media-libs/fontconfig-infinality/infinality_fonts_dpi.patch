@@ -1,0 +1,38 @@
+--- infinality/infinality.conf	2013-01-26 23:02:36.000000000 +0600
++++ infinality/infinality.conf	2014-11-11 22:52:55.000000000 +0600
+@@ -44,16 +44,17 @@
+ 
+ 	<!-- Ban Type-1 fonts because they render poorly --> 
+ 	<!-- Comment this out to allow all Type 1 fonts -->
+-	<selectfont> 
++	<!--
++	 <selectfont> 
+ 		<rejectfont> 
+ 			<pattern> 
+ 				<patelt name="fontformat" > 
+-					<string>Type 1</string> 
++					# <string>Type 1</string> 
+ 				</patelt> 
+ 			</pattern> 
+ 		</rejectfont> 
+ 	</selectfont> 
+-
++	-->
+ 	<!-- Globally use embedded bitmaps in fonts like Calibri? -->
+ 	<match target="font" >
+ 		<edit name="embeddedbitmap" mode="assign">
+@@ -96,12 +97,13 @@
+ 	<!-- Set DPI.  dpi should be set in ~/.Xresources to 96 -->
+ 	<!-- Setting to 72 here makes the px to pt conversions work better (Chrome) -->
+ 	<!-- Some may need to set this to 96 though -->
++	<!--
+ 	<match target="pattern">
+ 		<edit name="dpi" mode="assign">
+ 			<double>96</double>
+ 		</edit>
+ 	</match>
+-	
++	-->
+ 	<!-- Use Qt subpixel positioning on autohinted fonts? -->
+ 	<!-- This only applies to Qt and autohinted fonts. Qt determines subpixel positioning based on hintslight vs. hintfull, -->
+ 	<!--   however infinality patches force slight hinting inside freetype, so this essentially just fakes out Qt. -->

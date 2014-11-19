@@ -1,0 +1,72 @@
+From 1d338ca50f2c1d0e56cbbeedf84fc8293af67e69 Mon Sep 17 00:00:00 2001
+From: Sebastian Lackner <sebastian@fds-team.de>
+Date: Sat, 2 Aug 2014 06:30:33 +0200
+Subject: winex11: Avoid accidentially grabbing focus when desktop thread
+ unsets previous one.
+
+---
+ dlls/winex11.drv/mouse.c  |    6 +++---
+ dlls/winex11.drv/window.c |    2 +-
+ dlls/winex11.drv/x11drv.h |    2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/dlls/winex11.drv/mouse.c b/dlls/winex11.drv/mouse.c
+index f1e58fe..fecb543 100644
+--- a/dlls/winex11.drv/mouse.c
++++ b/dlls/winex11.drv/mouse.c
+@@ -450,7 +450,7 @@ void reset_clipping_window(void)
+  *
+  * Notification function called upon receiving a WM_X11DRV_CLIP_CURSOR.
+  */
+-LRESULT clip_cursor_notify( HWND hwnd, HWND new_clip_hwnd )
++LRESULT clip_cursor_notify( HWND hwnd, BOOL set_clip, HWND new_clip_hwnd )
+ {
+     struct x11drv_thread_data *data = x11drv_thread_data();
+ 
+@@ -471,7 +471,7 @@ LRESULT clip_cursor_notify( HWND hwnd, HWND new_clip_hwnd )
+         disable_xinput2();
+         DestroyWindow( hwnd );
+     }
+-    else if (hwnd == GetForegroundWindow())  /* request to clip */
++    else if (set_clip && hwnd == GetForegroundWindow())  /* request to clip */
+     {
+         RECT clip, virtual_rect = get_virtual_screen_rect();
+ 
+@@ -1402,7 +1402,7 @@ BOOL CDECL X11DRV_ClipCursor( LPCRECT clip )
+             if (tid && tid != GetCurrentThreadId() && pid == GetCurrentProcessId())
+             {
+                 TRACE( "forwarding clip request to %p\n", foreground );
+-                SendNotifyMessageW( foreground, WM_X11DRV_CLIP_CURSOR, 0, 0 );
++                SendNotifyMessageW( foreground, WM_X11DRV_CLIP_CURSOR, TRUE, 0 );
+                 return TRUE;
+             }
+             else if (grab_clipping_window( clip )) return TRUE;
+diff --git a/dlls/winex11.drv/window.c b/dlls/winex11.drv/window.c
+index 06e2294..48c8f01 100644
+--- a/dlls/winex11.drv/window.c
++++ b/dlls/winex11.drv/window.c
+@@ -2612,7 +2612,7 @@ LRESULT CDECL X11DRV_WindowMessage( HWND hwnd, UINT msg, WPARAM wp, LPARAM lp )
+             set_window_cursor( x11drv_thread_data()->clip_window, (HCURSOR)lp );
+         return 0;
+     case WM_X11DRV_CLIP_CURSOR:
+-        return clip_cursor_notify( hwnd, (HWND)lp );
++        return clip_cursor_notify( hwnd, (BOOL)wp, (HWND)lp );
+     default:
+         FIXME( "got window msg %x hwnd %p wp %lx lp %lx\n", msg, hwnd, wp, lp );
+         return 0;
+diff --git a/dlls/winex11.drv/x11drv.h b/dlls/winex11.drv/x11drv.h
+index bcbfe14..2a03167 100644
+--- a/dlls/winex11.drv/x11drv.h
++++ b/dlls/winex11.drv/x11drv.h
+@@ -608,7 +608,7 @@ extern void X11DRV_ResetSelectionOwner(void) DECLSPEC_HIDDEN;
+ extern void CDECL X11DRV_SetFocus( HWND hwnd ) DECLSPEC_HIDDEN;
+ extern void set_window_cursor( Window window, HCURSOR handle ) DECLSPEC_HIDDEN;
+ extern void sync_window_cursor( Window window ) DECLSPEC_HIDDEN;
+-extern LRESULT clip_cursor_notify( HWND hwnd, HWND new_clip_hwnd ) DECLSPEC_HIDDEN;
++extern LRESULT clip_cursor_notify( HWND hwnd, BOOL set_clip, HWND new_clip_hwnd ) DECLSPEC_HIDDEN;
+ extern void ungrab_clipping_window(void) DECLSPEC_HIDDEN;
+ extern void reset_clipping_window(void) DECLSPEC_HIDDEN;
+ extern BOOL clip_fullscreen_window( HWND hwnd, BOOL reset ) DECLSPEC_HIDDEN;
+-- 
+1.7.9.5
+
