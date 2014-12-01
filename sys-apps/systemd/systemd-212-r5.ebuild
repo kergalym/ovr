@@ -1,20 +1,12 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/systemd-9999.ebuild,v 1.147 2014/11/18 19:15:03 mgorny Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/systemd-212-r5.ebuild,v 1.17 2014/09/14 10:18:09 pacho Exp $
 
 EAPI=5
 
-#if LIVE
-AUTOTOOLS_AUTORECONF=yes
-EGIT_REPO_URI="git://anongit.freedesktop.org/${PN}/${PN}
-	http://cgit.freedesktop.org/${PN}/${PN}/"
-
-inherit git-r3
-#endif
-
 AUTOTOOLS_PRUNE_LIBTOOL_FILES=all
-PYTHON_COMPAT=( python{2_7,3_2,3_3,3_4} )
-inherit autotools-utils bash-completion-r1 linux-info multilib \
+PYTHON_COMPAT=( python{2_7,3_2,3_3} )
+inherit autotools-utils bash-completion-r1 fcaps linux-info multilib \
 	multilib-minimal pam python-single-r1 systemd toolchain-funcs udev \
 	user
 
@@ -24,49 +16,47 @@ SRC_URI="http://www.freedesktop.org/software/systemd/${P}.tar.xz"
 
 LICENSE="GPL-2 LGPL-2.1 MIT public-domain"
 SLOT="0/2"
-KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
-IUSE="acl apparmor audit cryptsetup curl doc elfutils gcrypt gudev http
-	idn introspection kdbus +kmod lz4 lzma pam policykit python qrcode +seccomp
-	selinux ssl terminal test vanilla"
+KEYWORDS="alpha amd64 arm ia64 ppc ppc64 sparc x86"
+IUSE="acl audit cryptsetup doc +firmware-loader gcrypt gudev http introspection
+	kdbus +kmod lzma pam policykit python qrcode +seccomp selinux ssl
+	test vanilla xattr"
 
-MINKV="3.8"
+# http://lists.freedesktop.org/archives/systemd-devel/2014-March/018267.html
+# (fixed in git)
+MINKV="3.7"
 
-COMMON_DEPEND=">=sys-apps/util-linux-2.25:0=
+COMMON_DEPEND=">=sys-apps/util-linux-2.20:0=
 	sys-libs/libcap:0=
 	acl? ( sys-apps/acl:0= )
-	apparmor? ( sys-libs/libapparmor:0= )
 	audit? ( >=sys-process/audit-2:0= )
 	cryptsetup? ( >=sys-fs/cryptsetup-1.6:0= )
-	curl? ( net-misc/curl:0= )
-	elfutils? ( >=dev-libs/elfutils-0.158:0= )
-	gcrypt? ( >=dev-libs/libgcrypt-1.4.5:0=[${MULTILIB_USEDEP}] )
+	gcrypt? ( >=dev-libs/libgcrypt-1.4.5:0= )
 	gudev? ( >=dev-libs/glib-2.34.3:2=[${MULTILIB_USEDEP}] )
 	http? (
 		>=net-libs/libmicrohttpd-0.9.33:0=
 		ssl? ( >=net-libs/gnutls-3.1.4:0= )
 	)
-	idn? ( net-dns/libidn:0= )
 	introspection? ( >=dev-libs/gobject-introspection-1.31.1:0= )
 	kmod? ( >=sys-apps/kmod-15:0= )
-	lz4? ( >=app-arch/lz4-0_p119:0=[${MULTILIB_USEDEP}] )
 	lzma? ( >=app-arch/xz-utils-5.0.5-r1:0=[${MULTILIB_USEDEP}] )
 	pam? ( virtual/pam:= )
 	python? ( ${PYTHON_DEPS} )
 	qrcode? ( media-gfx/qrencode:0= )
 	seccomp? ( sys-libs/libseccomp:0= )
 	selinux? ( sys-libs/libselinux:0= )
-	terminal? ( dev-libs/libevdev:0=
-		>=x11-libs/libxkbcommon-0.4:0=
-		x11-libs/libdrm:0= )
+	xattr? ( sys-apps/attr:0= )
 	abi_x86_32? ( !<=app-emulation/emul-linux-x86-baselibs-20130224-r9
 		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32(-)] )"
 
 # baselayout-2.2 has /run
 RDEPEND="${COMMON_DEPEND}
 	>=sys-apps/baselayout-2.2
+	|| (
+		>=sys-apps/util-linux-2.22
+		<sys-apps/sysvinit-2.88-r4
+	)
 	!sys-auth/nss-myhostname
 	!<sys-libs/glibc-2.14
-	!sys-fs/eudev
 	!sys-fs/udev"
 
 # sys-apps/dbus: the daemon only (+ build-time lib dep for tests)
@@ -91,28 +81,12 @@ DEPEND="${COMMON_DEPEND}
 	python? ( dev-python/lxml[${PYTHON_USEDEP}] )
 	test? ( >=sys-apps/dbus-1.6.8-r1:0 )"
 
-#if LIVE
-DEPEND="${DEPEND}
-	app-text/docbook-xml-dtd:4.2
-	app-text/docbook-xml-dtd:4.5
-	app-text/docbook-xsl-stylesheets
-	dev-libs/libxslt:0
-	dev-libs/gobject-introspection
-	>=dev-libs/libgcrypt-1.4.5:0"
-
-SRC_URI=
-KEYWORDS=
-#endif
-
 src_prepare() {
-#if LIVE
-	if use doc; then
-		gtkdocize --docdir docs/ || die
-	else
-		echo 'EXTRA_DIST =' > docs/gtk-doc.make
-	fi
+	local PATCHES=(
+		"${FILESDIR}"/212-0001-sd-rtnl-fix-off-by-one.patch
+		"${FILESDIR}"/212-0002-fsck-Search-for-fsck.type-in-PATH.patch
+	)
 
-#endif
 	# Bug 463376
 	sed -i -e 's/GROUP="dialout"/GROUP="uucp"/' rules/*.rules || die
 
@@ -122,12 +96,15 @@ src_prepare() {
 pkg_pretend() {
 	local CONFIG_CHECK="~AUTOFS4_FS ~BLK_DEV_BSG ~CGROUPS ~DEVTMPFS ~DMIID
 		~EPOLL ~FANOTIFY ~FHANDLE ~INOTIFY_USER ~IPV6 ~NET ~NET_NS ~PROC_FS
-		~SECCOMP ~SIGNALFD ~SYSFS ~TIMERFD ~TMPFS_XATTR
+		~SECCOMP ~SIGNALFD ~SYSFS ~TIMERFD
 		~!IDE ~!SYSFS_DEPRECATED ~!SYSFS_DEPRECATED_V2
-		~!GRKERNSEC_PROC ~!FW_LOADER_USER_HELPER"
+		~!GRKERNSEC_PROC"
 
 	use acl && CONFIG_CHECK+=" ~TMPFS_POSIX_ACL"
+	use pam && CONFIG_CHECK+=" ~AUDITSYSCALL"
+	use xattr && CONFIG_CHECK+=" ~TMPFS_XATTR"
 	kernel_is -lt 3 7 && CONFIG_CHECK+=" ~HOTPLUG"
+	use firmware-loader || CONFIG_CHECK+=" ~!FW_LOADER_USER_HELPER"
 
 	if linux_config_exists; then
 		local uevent_helper_path=$(linux_chkconfig_string UEVENT_HELPER_PATH)
@@ -152,6 +129,12 @@ pkg_pretend() {
 			ewarn "Kernel version at least ${MINKV} required"
 		fi
 
+		if ! use firmware-loader && kernel_is -lt 3 8; then
+			ewarn "You seem to be using kernel older than 3.8. Those kernel versions"
+			ewarn "require systemd with USE=firmware-loader to support loading"
+			ewarn "firmware. Missing this flag may cause some hardware not to work."
+		fi
+
 		check_extra_config
 	fi
 }
@@ -169,22 +152,11 @@ src_configure() {
 	multilib-minimal_src_configure
 }
 
-multilib_native_enable() {
-	if multilib_is_native_abi; then
-		echo "--enable-${1}"
-	else
-		echo "--disable-${1}"
-	fi
-}
-
 multilib_src_configure() {
 	local myeconfargs=(
 		# disable -flto since it is an optimization flag
 		# and makes distcc less effective
 		cc_cv_CFLAGS__flto=no
-
-		# Workaround for bug 516346
-		--enable-dependency-tracking
 
 		--disable-maintainer-mode
 		--localstatedir=/var
@@ -193,66 +165,34 @@ multilib_src_configure() {
 		--with-bashcompletiondir="$(get_bashcompdir)"
 		# make sure we get /bin:/sbin in $PATH
 		--enable-split-usr
-		# For testing.
-		--with-rootprefix="${ROOTPREFIX-/usr}"
-		--with-rootlibdir="${ROOTPREFIX-/usr}/$(get_libdir)"
 		# disable sysv compatibility
 		--with-sysvinit-path=
 		--with-sysvrcnd-path=
 		# no deps
 		--enable-efi
 		--enable-ima
-
-		# Optional components/dependencies
-		$(multilib_native_use_enable acl)
-		$(multilib_native_use_enable apparmor)
-		$(multilib_native_use_enable audit)
-		$(multilib_native_use_enable cryptsetup libcryptsetup)
-		$(multilib_native_use_enable curl libcurl)
-		$(multilib_native_use_enable doc gtk-doc)
-		$(multilib_native_use_enable elfutils)
+		# optional components/dependencies
+		$(use_enable acl)
+		$(use_enable audit)
+		$(use_enable cryptsetup libcryptsetup)
+		$(use_enable doc gtk-doc)
 		$(use_enable gcrypt)
 		$(use_enable gudev)
-		$(multilib_native_use_enable http microhttpd)
-		$(usex http $(multilib_native_use_enable ssl gnutls) --disable-gnutls)
-		$(multilib_native_use_enable idn libidn)
-		$(multilib_native_use_enable introspection)
+		$(use_enable http microhttpd)
+		$(usex http $(use_enable ssl gnutls) --disable-gnutls)
+		$(use_enable introspection)
 		$(use_enable kdbus)
-		$(multilib_native_use_enable kmod)
-		$(use_enable lz4)
+		$(use_enable kmod)
 		$(use_enable lzma xz)
-		$(multilib_native_use_enable pam)
-		$(multilib_native_use_enable policykit polkit)
-		$(multilib_native_use_with python)
-		$(multilib_native_use_enable python python-devel)
-		$(multilib_native_use_enable qrcode qrencode)
-		$(multilib_native_use_enable seccomp)
-		$(multilib_native_use_enable selinux)
-		$(multilib_native_use_enable terminal)
-		$(multilib_native_use_enable test tests)
-		$(multilib_native_use_enable test dbus)
-
-		# Disable optional binaries for non-native abis
-		$(multilib_native_enable backlight)
-		$(multilib_native_enable binfmt)
-		$(multilib_native_enable bootchart)
-		$(multilib_native_enable coredump)
-		$(multilib_native_enable firstboot)
-		$(multilib_native_enable hibernate)
-		$(multilib_native_enable hostnamed)
-		$(multilib_native_enable localed)
-		$(multilib_native_enable logind)
-		$(multilib_native_enable machined)
-		$(multilib_native_enable networkd)
-		$(multilib_native_enable quotacheck)
-		$(multilib_native_enable randomseed)
-		$(multilib_native_enable resolved)
-		$(multilib_native_enable rfkill)
-		$(multilib_native_enable sysusers)
-		$(multilib_native_enable timedated)
-		$(multilib_native_enable timesyncd)
-		$(multilib_native_enable tmpfiles)
-		$(multilib_native_enable vconsole)
+		$(use_enable pam)
+		$(use_enable policykit polkit)
+		$(use_with python)
+		$(use_enable python python-devel)
+		$(use_enable qrcode qrencode)
+		$(use_enable seccomp)
+		$(use_enable selinux)
+		$(use_enable test tests)
+		$(use_enable xattr)
 
 		# not supported (avoid automagic deps in the future)
 		--disable-chkconfig
@@ -266,14 +206,48 @@ multilib_src_configure() {
 		--with-dbussessionservicedir="${EPREFIX}/usr/share/dbus-1/services"
 		--with-dbussystemservicedir="${EPREFIX}/usr/share/dbus-1/system-services"
 		--with-dbusinterfacedir="${EPREFIX}/usr/share/dbus-1/interfaces"
-
-		--with-ntp-servers="0.gentoo.pool.ntp.org 1.gentoo.pool.ntp.org 2.gentoo.pool.ntp.org 3.gentoo.pool.ntp.org"
 	)
+
+	if use firmware-loader; then
+		myeconfargs+=(
+			--with-firmware-path="/lib/firmware/updates:/lib/firmware"
+		)
+	fi
+
+	# Added for testing; this is UNSUPPORTED by the Gentoo systemd team!
+	if [[ -n ${ROOTPREFIX+set} ]]; then
+		myeconfargs+=(
+			--with-rootprefix="${ROOTPREFIX}"
+			--with-rootlibdir="${ROOTPREFIX}/$(get_libdir)"
+		)
+	fi
 
 	if ! multilib_is_native_abi; then
 		myeconfargs+=(
 			ac_cv_search_cap_init=
 			ac_cv_header_sys_capability_h=yes
+			DBUS_CFLAGS=' '
+			DBUS_LIBS=' '
+
+			--disable-acl
+			--disable-audit
+			--disable-gcrypt
+			--disable-gnutls
+			--disable-gtk-doc
+			--disable-introspection
+			--disable-kmod
+			--disable-libcryptsetup
+			--disable-microhttpd
+			--disable-networkd
+			--disable-pam
+			--disable-polkit
+			--disable-qrencode
+			--disable-seccomp
+			--disable-selinux
+			--disable-tests
+			--disable-xattr
+			--disable-xz
+			--disable-python-devel
 		)
 	fi
 
@@ -320,6 +294,9 @@ multilib_src_install() {
 
 	if multilib_is_native_abi; then
 		emake "${mymakeopts[@]}" install
+		# Even with --enable-networkd, it's not right to have this running by default
+		# when it's unconfigured.
+		rm -f "${D}"/etc/systemd/system/multi-user.target.wants/systemd-networkd.service
 	else
 		mymakeopts+=(
 			install-libLTLIBRARIES
@@ -334,10 +311,15 @@ multilib_src_install() {
 	fi
 
 	# install compat pkg-config files
-	# Change dbus to >=sys-apps/dbus-1.8.8 if/when this is dropped.
 	local pcfiles=( src/compat-libs/libsystemd-{daemon,id128,journal,login}.pc )
 	emake "${mymakeopts[@]}" install-pkgconfiglibDATA \
 		pkgconfiglib_DATA="${pcfiles[*]}"
+
+	# Create symlinks for old libs
+	dosym libsystemd.so "/usr/$(get_libdir)/libsystemd-daemon.so"
+	dosym libsystemd.so "/usr/$(get_libdir)/libsystemd-id128.so"
+	dosym libsystemd.so "/usr/$(get_libdir)/libsystemd-journal.so"
+	dosym libsystemd.so "/usr/$(get_libdir)/libsystemd-login.so"
 }
 
 multilib_src_install_all() {
@@ -354,18 +336,10 @@ multilib_src_install_all() {
 
 	# Preserve empty dirs in /etc & /var, bug #437008
 	keepdir /etc/binfmt.d /etc/modules-load.d /etc/tmpfiles.d \
-		/etc/systemd/ntp-units.d /etc/systemd/user /var/lib/systemd \
-		/var/log/journal/remote
+		/etc/systemd/ntp-units.d /etc/systemd/user /var/lib/systemd
 
 	# Symlink /etc/sysctl.conf for easy migration.
 	dosym ../sysctl.conf /etc/sysctl.d/99-sysctl.conf
-
-	# If we install these symlinks, there is no way for the sysadmin to remove them
-	# permanently.
-	rm -f "${D}"/etc/systemd/system/multi-user.target.wants/systemd-networkd.service
-	rm -f "${D}"/etc/systemd/system/multi-user.target.wants/systemd-resolved.service
-	rm -f "${D}"/etc/systemd/system/multi-user.target.wants/systemd-timesyncd.service
-	rm -rf "${D}"/etc/systemd/system/network-online.target.wants
 }
 
 migrate_locale() {
@@ -441,22 +415,11 @@ migrate_net_name_slot() {
 }
 
 pkg_postinst() {
-	newusergroup() {
-		enewgroup "$1"
-		enewuser "$1" -1 -1 -1 "$1"
-	}
-
-	enewgroup input
 	enewgroup systemd-journal
-	newusergroup systemd-bus-proxy
-	newusergroup systemd-journal-gateway
-	newusergroup systemd-journal-remote
-	newusergroup systemd-journal-upload
-	newusergroup systemd-network
-	newusergroup systemd-resolve
-	newusergroup systemd-timesync
-	use http && newusergroup systemd-journal-gateway
-
+	if use http; then
+		enewgroup systemd-journal-gateway
+		enewuser systemd-journal-gateway -1 -1 -1 systemd-journal-gateway
+	fi
 	systemd_update_catalog
 
 	# Keep this here in case the database format changes so it gets updated
@@ -466,6 +429,9 @@ pkg_postinst() {
 	fi
 
 	udev_reload || FAIL=1
+
+	# Bug 468876
+	fcaps cap_dac_override,cap_sys_ptrace=ep usr/bin/systemd-detect-virt
 
 	# Bug 465468, make sure locales are respect, and ensure consistency
 	# between OpenRC & systemd
@@ -486,13 +452,6 @@ pkg_postinst() {
 		ewarn "Not having it is not supported by upstream and will cause tools like 'df'"
 		ewarn "and 'mount' to not work properly. Please run:"
 		ewarn "	# ln -sf '${ROOT}proc/self/mounts' '${ROOT}etc/mtab'"
-		ewarn
-	fi
-
-	if [[ $(readlink "${ROOT}"/etc/resolv.conf) == */run/systemd/network/resolv.conf ]]; then
-		ewarn "resolv.conf is now generated by systemd-resolved. To use it, enable"
-		ewarn "systemd-resolved.service, and create a symlink from /etc/resolv.conf"
-		ewarn "to /run/systemd/resolve/resolv.conf"
 		ewarn
 	fi
 

@@ -1,6 +1,6 @@
 # Copyright 1999-2014 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/systemd-216-r1.ebuild,v 1.2 2014/10/12 09:58:35 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/systemd-217-r1.ebuild,v 1.1 2014/11/04 19:24:27 floppym Exp $
 
 EAPI=5
 
@@ -17,15 +17,16 @@ SRC_URI="http://www.freedesktop.org/software/systemd/${P}.tar.xz"
 LICENSE="GPL-2 LGPL-2.1 MIT public-domain"
 SLOT="0/2"
 KEYWORDS="~alpha ~amd64 ~arm ~ia64 ~ppc ~ppc64 ~sparc ~x86"
-IUSE="acl audit cryptsetup curl doc elfutils +firmware-loader gcrypt gudev http
+IUSE="acl apparmor audit cryptsetup curl doc elfutils gcrypt gudev http
 	idn introspection kdbus +kmod lz4 lzma pam policykit python qrcode +seccomp
-	selinux ssl test vanilla"
+	selinux ssl terminal test vanilla"
 
 MINKV="3.8"
 
-COMMON_DEPEND=">=sys-apps/util-linux-2.20:0=
+COMMON_DEPEND=">=sys-apps/util-linux-2.25:0=
 	sys-libs/libcap:0=
 	acl? ( sys-apps/acl:0= )
+	apparmor? ( sys-libs/libapparmor:0= )
 	audit? ( >=sys-process/audit-2:0= )
 	cryptsetup? ( >=sys-fs/cryptsetup-1.6:0= )
 	curl? ( net-misc/curl:0= )
@@ -46,16 +47,15 @@ COMMON_DEPEND=">=sys-apps/util-linux-2.20:0=
 	qrcode? ( media-gfx/qrencode:0= )
 	seccomp? ( sys-libs/libseccomp:0= )
 	selinux? ( sys-libs/libselinux:0= )
+	terminal? ( dev-libs/libevdev:0=
+		>=x11-libs/libxkbcommon-0.4:0=
+		x11-libs/libdrm:0= )
 	abi_x86_32? ( !<=app-emulation/emul-linux-x86-baselibs-20130224-r9
 		!app-emulation/emul-linux-x86-baselibs[-abi_x86_32(-)] )"
 
 # baselayout-2.2 has /run
 RDEPEND="${COMMON_DEPEND}
 	>=sys-apps/baselayout-2.2
-	|| (
-		>=sys-apps/util-linux-2.22
-		<sys-apps/sysvinit-2.88-r4
-	)
 	!sys-auth/nss-myhostname
 	!<sys-libs/glibc-2.14
 	!sys-fs/udev"
@@ -86,6 +86,10 @@ src_prepare() {
 	# Bug 463376
 	sed -i -e 's/GROUP="dialout"/GROUP="uucp"/' rules/*.rules || die
 
+	# missing in tarball
+	cp "${FILESDIR}"/217-systemd-consoled.service.in \
+		units/user/systemd-consoled.service.in || die
+
 	autotools-utils_src_prepare
 }
 
@@ -94,11 +98,10 @@ pkg_pretend() {
 		~EPOLL ~FANOTIFY ~FHANDLE ~INOTIFY_USER ~IPV6 ~NET ~NET_NS ~PROC_FS
 		~SECCOMP ~SIGNALFD ~SYSFS ~TIMERFD ~TMPFS_XATTR
 		~!IDE ~!SYSFS_DEPRECATED ~!SYSFS_DEPRECATED_V2
-		~!GRKERNSEC_PROC"
+		~!GRKERNSEC_PROC ~!FW_LOADER_USER_HELPER"
 
 	use acl && CONFIG_CHECK+=" ~TMPFS_POSIX_ACL"
 	kernel_is -lt 3 7 && CONFIG_CHECK+=" ~HOTPLUG"
-	use firmware-loader || CONFIG_CHECK+=" ~!FW_LOADER_USER_HELPER"
 
 	if linux_config_exists; then
 		local uevent_helper_path=$(linux_chkconfig_string UEVENT_HELPER_PATH)
@@ -121,12 +124,6 @@ pkg_pretend() {
 	if [[ ${MERGE_TYPE} != buildonly ]]; then
 		if kernel_is -lt ${MINKV//./ }; then
 			ewarn "Kernel version at least ${MINKV} required"
-		fi
-
-		if ! use firmware-loader && kernel_is -lt 3 8; then
-			ewarn "You seem to be using kernel older than 3.8. Those kernel versions"
-			ewarn "require systemd with USE=firmware-loader to support loading"
-			ewarn "firmware. Missing this flag may cause some hardware not to work."
 		fi
 
 		check_extra_config
@@ -182,6 +179,7 @@ multilib_src_configure() {
 
 		# Optional components/dependencies
 		$(multilib_native_use_enable acl)
+		$(multilib_native_use_enable apparmor)
 		$(multilib_native_use_enable audit)
 		$(multilib_native_use_enable cryptsetup libcryptsetup)
 		$(multilib_native_use_enable curl libcurl)
@@ -204,6 +202,7 @@ multilib_src_configure() {
 		$(multilib_native_use_enable qrcode qrencode)
 		$(multilib_native_use_enable seccomp)
 		$(multilib_native_use_enable selinux)
+		$(multilib_native_use_enable terminal)
 		$(multilib_native_use_enable test tests)
 		$(multilib_native_use_enable test dbus)
 
@@ -213,6 +212,7 @@ multilib_src_configure() {
 		$(multilib_native_enable bootchart)
 		$(multilib_native_enable coredump)
 		$(multilib_native_enable firstboot)
+		$(multilib_native_enable hibernate)
 		$(multilib_native_enable hostnamed)
 		$(multilib_native_enable localed)
 		$(multilib_native_enable logind)
@@ -220,7 +220,6 @@ multilib_src_configure() {
 		$(multilib_native_enable networkd)
 		$(multilib_native_enable quotacheck)
 		$(multilib_native_enable randomseed)
-		$(multilib_native_enable readahead)
 		$(multilib_native_enable resolved)
 		$(multilib_native_enable rfkill)
 		$(multilib_native_enable sysusers)
@@ -230,7 +229,6 @@ multilib_src_configure() {
 		$(multilib_native_enable vconsole)
 
 		# not supported (avoid automagic deps in the future)
-		--disable-apparmor
 		--disable-chkconfig
 
 		# hardcode a few paths to spare some deps
@@ -245,12 +243,6 @@ multilib_src_configure() {
 
 		--with-ntp-servers="0.gentoo.pool.ntp.org 1.gentoo.pool.ntp.org 2.gentoo.pool.ntp.org 3.gentoo.pool.ntp.org"
 	)
-
-	if use firmware-loader; then
-		myeconfargs+=(
-			--with-firmware-path="/lib/firmware/updates:/lib/firmware"
-		)
-	fi
 
 	if ! multilib_is_native_abi; then
 		myeconfargs+=(
@@ -316,6 +308,7 @@ multilib_src_install() {
 	fi
 
 	# install compat pkg-config files
+	# Change dbus to >=sys-apps/dbus-1.8.8 if/when this is dropped.
 	local pcfiles=( src/compat-libs/libsystemd-{daemon,id128,journal,login}.pc )
 	emake "${mymakeopts[@]}" install-pkgconfiglibDATA \
 		pkgconfiglib_DATA="${pcfiles[*]}"
@@ -324,10 +317,6 @@ multilib_src_install() {
 multilib_src_install_all() {
 	prune_libtool_files --modules
 	einstalldocs
-
-	dodir "/etc/"
-	insinto "/etc/"
-	doins "${FILESDIR}/vconsole.conf" || die
 
 	# we just keep sysvinit tools, so no need for the mans
 	rm "${D}"/usr/share/man/man8/{halt,poweroff,reboot,runlevel,shutdown,telinit}.8 \
@@ -339,7 +328,8 @@ multilib_src_install_all() {
 
 	# Preserve empty dirs in /etc & /var, bug #437008
 	keepdir /etc/binfmt.d /etc/modules-load.d /etc/tmpfiles.d \
-		/etc/systemd/ntp-units.d /etc/systemd/user /var/lib/systemd
+		/etc/systemd/ntp-units.d /etc/systemd/user /var/lib/systemd \
+		/var/log/journal/remote
 
 	# Symlink /etc/sysctl.conf for easy migration.
 	dosym ../sysctl.conf /etc/sysctl.d/99-sysctl.conf

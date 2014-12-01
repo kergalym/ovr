@@ -1,9 +1,54 @@
 # ChangeLog for sys-apps/systemd
 # Copyright 1999-2014 Gentoo Foundation; Distributed under the GPL v2
-# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/ChangeLog,v 1.311 2014/10/12 09:58:35 pacho Exp $
+# $Header: /var/cvsroot/gentoo-x86/sys-apps/systemd/ChangeLog,v 1.321 2014/11/18 19:15:03 mgorny Exp $
 
-  11 Nov 2014; Galym Kerimbekov <kegalym2@mail.ru> systemd-216-r2.ebuild:
-  Added optional vconsole.conf for ovr overlay
+*systemd-217-r3 (01 Dec 2014)
+
+  01 Dec 2014; Galym Kerimbekov <kegalym2@mail.ru> +systemd-217-r3.ebuild:
+  Backport several patches. Resolves bugs 527832, 527894.
+  
+  18 Nov 2014; Michał Górny <mgorny@gentoo.org> systemd-217-r2.ebuild,
+  systemd-9999.ebuild:
+  Add sys-fs/eudev blocker for completeness.
+
+*systemd-217-r2 (05 Nov 2014)
+
+  05 Nov 2014; Mike Gilbert <floppym@gentoo.org> +systemd-217-r2.ebuild:
+  Backport several patches. Resolves bugs 527832, 527894.
+
+*systemd-217-r1 (04 Nov 2014)
+
+  04 Nov 2014; Mike Gilbert <floppym@gentoo.org> +systemd-217-r1.ebuild,
+  -systemd-217.ebuild, systemd-9999.ebuild:
+  Require >=util-linux-2.25, bug 528228.
+
+*systemd-217 (30 Oct 2014)
+
+  30 Oct 2014; Michał Górny <mgorny@gentoo.org>
+  +files/217-systemd-consoled.service.in, +systemd-217.ebuild, metadata.xml,
+  systemd-9999.ebuild:
+  Version bump.
+
+  22 Oct 2014; Mike Gilbert <floppym@gentoo.org> systemd-216-r1.ebuild,
+  systemd-9999.ebuild:
+  Use keepdir /var/log/journal/remote instead of removing it.
+
+  20 Oct 2014; Mike Gilbert <floppym@gentoo.org> systemd-216-r1.ebuild,
+  systemd-9999.ebuild:
+  Remove empty /var/log/journal directory.
+
+  19 Oct 2014; Mike Gilbert <floppym@gentoo.org> metadata.xml:
+  Improve cryptsetup description.
+
+  19 Oct 2014; Mike Gilbert <floppym@gentoo.org> metadata.xml:
+  Remove pointless comment.
+
+  19 Oct 2014; Mike Gilbert <floppym@gentoo.org> metadata.xml,
+  systemd-216-r1.ebuild, systemd-9999.ebuild:
+  Add use flag to control apparmor support, bug 525894 by Dainius Masiliūnas.
+
+  15 Oct 2014; Tobias Klausmann <klausman@gentoo.org> systemd-215-r3.ebuild:
+  Stable on alpha, bug 517120
 
   12 Oct 2014; Pacho Ramos <pacho@gentoo.org> systemd-216-r1.ebuild:
   Readd sparc keyword as I don't see when/why was it dropped
