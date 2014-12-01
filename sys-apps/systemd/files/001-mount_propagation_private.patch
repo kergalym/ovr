@@ -11,7 +11,7 @@
 -         * specific setups need other settings they can reset the
 -         * propagation mode to private if needed. */
 +        /* The root directory marked as shared in regards to mount
-+         * propagation. The kernel defaults to "private", but it is 
++         * propagation. The kernel defaults to "private", so it is 
 +	  * more safe revert it to private. */
          if (detect_container(NULL) <= 0)
 -                if (mount(NULL, "/", NULL, MS_REC|MS_SHARED, NULL) < 0)
