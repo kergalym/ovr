@@ -5,7 +5,7 @@
 *systemd-217-r3 (01 Dec 2014)
 
   01 Dec 2014; Galym Kerimbekov <kegalym2@mail.ru> +systemd-217-r3.ebuild:
-  Backport several patches. Resolves bugs 527832, 527894.
+  Reverting private mount propagation. See bug 531150.
   
   18 Nov 2014; Michał Górny <mgorny@gentoo.org> systemd-217-r2.ebuild,
   systemd-9999.ebuild:
