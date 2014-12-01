@@ -95,6 +95,8 @@ src_prepare() {
 	EPATCH_FORCE=yes EPATCH_SUFFIX=patch epatch
 	autotools-utils_src_prepare
 		
+	epatch "${FILESDIR}/002-journald.conf_logs.patch"
+		  
 	if use ms_private; then
 	epatch "${FILESDIR}/001-mount_propagation_private.patch"
 	fi
