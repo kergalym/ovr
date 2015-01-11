@@ -10,3 +10,8 @@ net-im/myagent-im **
 # required by kde-misc/plasma-globalmenu-9999::ovr
 # required by plasma-globalmenu (argument)
 =gnome-extra/gnome-globalmenu-9999 **
+=app-emulation/wine-9999 **
+=media-plugins/deadbeef-qt-9999 **
+#=sys-apps/portage-9999 **
+=app-emulation/wine-9999-r1 **
+=media-libs/mesa-10.4.0 **

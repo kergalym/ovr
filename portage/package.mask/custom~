@@ -2,7 +2,7 @@
 =dev-libs/libgcrypt-1.6.1
 >dev-libs/geoip-1.5.2
 >x11-wm/compiz-0.8.9-r1
-#>media-gfx/splashutils-1.5.4.4-r3
+>media-gfx/splashutils-1.5.4.4-r3
 >sys-power/upower-0.9.23-r2
 #>media-libs/freetype-2.5.0.1
 >sys-power/nut-2.6.5-r1
@@ -12,7 +12,7 @@
 #>=media-libs/qt-gstreamer-0.10.3
 >games-strategy/0ad-0.0.16_alpha-r2
 >dev-lang/php-5.5.16
-#app-emulation/wine::gentoo
+app-emulation/wine::gentoo
 ## HPLIP
 #>net-print/hplip-3.14.1
 
@@ -26,12 +26,12 @@
 #>x11-libs/gtk+-2.24.24
 app-emulation/emul-linux-x86-baselibs
 =media-gfx/blender-9999
->media-libs/mesa-10.2.8
+>media-libs/mesa-10.3.0
 #>dev-db/mysql-5.5.40
 #>virtual/mysql-5.5
 >net-libs/webkit-gtk-2.4.4-r201
 >sys-kernel/gentoo-sources-3.17.0
-#>x11-drivers/nvidia-drivers-343.22-r2
+>x11-drivers/nvidia-drivers-343.22-r2
 
 >net-misc/networkmanager-0.9.10.0
 >gnome-extra/nm-applet-0.9.8.10-r1
@@ -41,9 +41,3 @@ app-emulation/emul-linux-x86-baselibs
 =net-im/myagent-im-9999-r1::ovr
 >dev-lang/php-5.3.29
 >media-gfx/blender-2.72b
-#>sys-apps/portage-2.2.14
->app-emulation/wine-9999:gentoo
->x11-drivers/nvidia-drivers-343.36
->app-emulation/wine-1.7.33
->dev-libs/boost-1.55.0-r2
->media-gfx/blender-2.72b-r1

@@ -1,0 +1,14 @@
+--- bashrc	2015-01-11 12:17:43.234531032 +0600
++++ bashrc.new	2015-01-11 12:17:18.284531269 +0600
+@@ -81,3 +81,11 @@
+ # Try to keep environment pollution down, EPA loves us.
+ unset use_color safe_term match_lhs
+ 
++if [ -d /etc/bash/bashrc.d ]; then
++  for i in /etc/bash/bashrc.d/*.sh; do
++    if [ -r $i ]; then
++      . $i
++    fi
++  done
++  unset i
++fi

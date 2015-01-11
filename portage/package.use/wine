@@ -1,1 +1,1 @@
-app-emulation/wine abi_x86_32 -nine
+app-emulation/wine abi_x86_32 nine -gstreamer -pulseaudio

@@ -1,7 +1,7 @@
 ovr-overlay 
 ===
 
-Packages not maintained elsewhere
+Packages and configs not maintained elsewhere
 
 This overlay is not official and not available in layman (as an official source).
 

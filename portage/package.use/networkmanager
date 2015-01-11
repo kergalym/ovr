@@ -1,1 +1,1 @@
-net-misc/networkmanager dhcpcd -dhclient
+net-misc/networkmanager dhcpcd -dhclient consolekit introspection
