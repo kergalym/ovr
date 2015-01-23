@@ -11,9 +11,9 @@ This overlay is not official and not available in layman (as an official source)
 
 Please read https://wiki.gentoo.org/wiki/Layman for more information regarding layman.
 
-### Add it using layman (currently doesn't work):
+### Add it using layman:
 
-      layman -f -o http://github.com/kergalym/ovr/repositories.xml -a ovr
+      layman -f -o https://raw.githubusercontent.com/kergalym/ovr/master/repositories.xml -a ovr
 
 ### Add it manually :
 
