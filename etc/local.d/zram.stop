@@ -1,0 +1,19 @@
+#!/bin/bash
+ 
+swapoff /dev/zram0
+swapoff /dev/zram1
+swapoff /dev/zram2
+swapoff /dev/zram3
+swapoff /dev/zram4
+swapoff /dev/zram5
+
+ 
+echo 1 > /sys/block/zram0/reset
+echo 1 > /sys/block/zram1/reset
+echo 1 > /sys/block/zram2/reset
+echo 1 > /sys/block/zram3/reset
+echo 1 > /sys/block/zram4/reset
+echo 1 > /sys/block/zram5/reset
+
+ 
+modprobe -r zram
