@@ -1,0 +1,42 @@
+#!/bin/bash
+
+### Author: Kerimbekov Galym 
+### E-mail: kerimbekov.galym@yandex.ru
+
+BLOCKDEV="/dev/sdX"
+SYSROOT="/mnt/gentoo"
+LIVE_ROOT="/mnt/livecd"
+$CHROOTPARM="linux32 chroot"
+
+RETVAL=0
+
+case "$1" in
+   "") 
+      echo "Usage: $0 [-e|--editor] [-b|--install-bootloader] [-i|--install] [-f|--format]"
+      RETVAL=1
+   --editor|-e)
+      $CHROOTPARM $SYSROOT /bin/bash -c '/usr/bin/nano /etc/portage/make.conf /etc/fstab /etc/conf.d/hostname /etc/timezone /etc/default/grub'
+      ;;
+   --install-bootloader|-b)
+      $CHROOTPARM $SYSROOT /bin/bash -c '/usr/bin/grep -v rootfs /proc/mounts > /etc/mtab ; /usr/bin/grub2-install --no-floppy'
+      ;;
+   --install|-i)
+      echo "Mounting block device" ; mount 
+      ;;
+esac
+
+if [ "mount | grep /mnt/gentoo" = true ] ; then
+    rsync -aArph --progress $LIVE_ROOT/* $SYSROOT/
+    cp -L /etc/resolv.conf $BUILDROOT/etc/
+    mount -t proc none $BUILDROOT/proc
+    mount --rbind /sys $BUILDROOT/sys
+    mount --rbind /dev $BUILDROOT/dev
+    $CHROOTPARM $SYSROOT /bin/bash -c '/usr/bin/grub2-mkconfig -o /boot/grub/grub.cfg'
+    $CHROOTPARM $SYSROOT /bin/bash
+    echo "Umounting chroot"
+    umount -l $SYSROOT/proc
+    umount -l $SYSROOT/sys
+    umount -l $SYSROOT/dev
+    echo "Exiting"
+fi
+
