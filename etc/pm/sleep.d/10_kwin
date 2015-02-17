@@ -1,0 +1,16 @@
+#!/bin/bash
+
+#. /usr/lib/pm-utils/functions
+
+case "$1" in
+    hibernate|suspend)
+    qdbus org.kde.kwin /KWin org.kde.KWin.toggleCompositing
+    ;;
+    thaw|resume)
+    qdbus org.kde.kwin /KWin org.kde.KWin.toggleCompositing
+    ;;
+    *)
+    ;;
+esac
+
+exit
