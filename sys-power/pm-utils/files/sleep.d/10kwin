@@ -1,0 +1,28 @@
+#!/bin/sh
+#Workaround for https://bugs.kde.org/show_bug.cgi?id=344326
+
+. "${PM_FUNCTIONS}"
+
+suspend_kwin()
+{
+        printf "Disable Kwin Compositing..."
+        /usr/bin/qdbus org.kde.kwin /KWin org.kde.KWin.toggleCompositing || \
+            echo Failed.
+
+}
+
+resume_kwin()
+{
+        printf "Enable Kwin Compositing..."
+        /usr/bin/qdbus org.kde.kwin /KWin org.kde.KWin.toggleCompositing || \
+            echo Failed.
+}
+
+is_set "$NEED_TODO" || exit $NA
+
+case "$1" in
+        hibernate|suspend) suspend_kwin ;;
+        thaw|resume) resume_kwin ;;
+        *) exit $NA ;;
+esac
+ 
