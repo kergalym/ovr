@@ -69,6 +69,7 @@ src_install() {
 
 	exeinto /usr/$(get_libdir)/${PN}/sleep.d
 	doexe "${FILESDIR}"/sleep.d/50unload_alx
+	doexe "${FILESDIR}"/sleep.d/10kwin
 
 	exeinto /usr/$(get_libdir)/${PN}/power.d
 	doexe "${FILESDIR}"/power.d/{pci_devices,usb_bluetooth}
