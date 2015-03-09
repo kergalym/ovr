@@ -32,9 +32,6 @@ src_install() {
  doins "${S}/50-mouse-deceleration.conf" || die
  insinto "/etc/X11/xorg.conf.d/"
  doins "${S}/50-nvidia.conf.back" || die
- dodir "/etc/sysctl.d"
- insinto "/etc/sysctl.d/"
- doins "${S}/sysctl.conf" || die
  dodir "/var/lib/samba/usershares"
 # Not permitted in sandbox
 # chgrp users "/var/lib/samba/usershares"
