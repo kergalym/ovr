@@ -42,6 +42,9 @@ src_install() {
  doins "${S}/smb.conf" || die
  insinto "/etc/polkit-1/rules.d"
  doins "${S}/10-users.rules" || die
+ dodir "/usr/share/kde4/services"
+ insinto "/usr/share/kde4/services"
+ doins "${S}/kcm_akonadi.desktop" || die
  dodir "/etc/splash"
  cp -r "${S}/livecd-12.0" ${D}/etc/splash/ || die
  cp  "${S}/luxisri.ttf" ${D}/etc/splash/ || die
