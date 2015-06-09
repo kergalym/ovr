@@ -1,50 +1,63 @@
---- src/daemon/daemon.conf.in	2014-01-24 00:57:55.000000000 +0600
-+++ src/daemon/daemon.conf.in	2014-09-20 22:39:24.439820664 +0600
-@@ -20,7 +20,7 @@
+--- src/daemon/daemon.conf.in	2015-02-12 20:10:35.000000000 +0600
++++ src/daemon/daemon.conf.in  2015-06-10 04:05:56.220570370 +0600
+@@ -18,7 +18,7 @@
  ## commenting.
  changequote(`[', `]')dnl Set up m4 quoting
  
 -; daemonize = no
-+  daemonize = yes
++daemonize = yes
  ; fail = yes
  ; allow-module-loading = yes
  ; allow-exit = yes
-@@ -32,7 +32,7 @@
+@@ -30,12 +30,12 @@
  ; enable-shm = yes
  ; shm-size-bytes = 0 # setting this 0 will use the system-default, usually 64 MiB
  ; lock-memory = no
 -; cpu-limit = no
-+  cpu-limit = yes
++cpu-limit = yes
  
- ; high-priority = yes
+-; high-priority = yes
++high-priority = no
  ; nice-level = -11
-@@ -58,7 +58,7 @@
- ; enable-remixing = yes
+ 
+-; realtime-scheduling = yes
++realtime-scheduling = no
+ ; realtime-priority = 5
+ 
+ ; exit-idle-time = 20
+@@ -52,11 +52,11 @@
+ ; log-time = no
+ ; log-backtrace = 0
+ 
+-; resample-method = speex-float-1
+-; enable-remixing = yes
++resample-method = src-sinc-fastest
++enable-remixing = yes
  ; enable-lfe-remixing = no
  
 -; flat-volumes = yes
-+  flat-volumes = no
++flat-volumes = no
  
  ifelse(@HAVE_SYS_RESOURCE_H@, 1, [dnl
  ; rlimit-fsize = -1
-@@ -78,14 +78,14 @@
- ; rlimit-rttime = 1000000
+@@ -76,14 +76,14 @@
+ ; rlimit-rttime = 200000
  ])dnl
  
 -; default-sample-format = s16le
 -; default-sample-rate = 44100
-+  default-sample-format = s16le
-+  default-sample-rate = 44100
++default-sample-format = s16le
++default-sample-rate = 96000
  ; alternate-sample-rate = 48000
 -; default-sample-channels = 2
 -; default-channel-map = front-left,front-right
-+  default-sample-channels = 2
-+  default-channel-map = front-left,front-right
++default-sample-channels = 2
++default-channel-map = front-left,front-right
  
 -; default-fragments = 4
 -; default-fragment-size-msec = 25
-+  default-fragments = 10
-+  default-fragment-size-msec = 5
++default-fragments = 4
++default-fragment-size-msec = 25
  
  ; enable-deferred-volume = yes
  ; deferred-volume-safety-margin-usec = 8000
