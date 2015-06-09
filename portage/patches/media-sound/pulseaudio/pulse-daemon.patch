@@ -19,7 +19,8 @@
 -; high-priority = yes
 +high-priority = no
  ; nice-level = -11
- 
+
+ ## Disable shedule
 -; realtime-scheduling = yes
 +realtime-scheduling = no
  ; realtime-priority = 5
