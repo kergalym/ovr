@@ -1,5 +1,5 @@
 --- src/daemon/daemon.conf.in	2015-02-12 20:10:35.000000000 +0600
-+++ src/daemon/daemon.conf.in  2015-06-10 04:05:56.220570370 +0600
++++ src/daemon/daemon.conf.in	2015-06-12 19:10:10.823292957 +0600
 @@ -18,7 +18,7 @@
  ## commenting.
  changequote(`[', `]')dnl Set up m4 quoting
@@ -19,8 +19,7 @@
 -; high-priority = yes
 +high-priority = no
  ; nice-level = -11
-
- ## Disable shedule
+ 
 -; realtime-scheduling = yes
 +realtime-scheduling = no
  ; realtime-priority = 5
@@ -48,7 +47,7 @@
 -; default-sample-format = s16le
 -; default-sample-rate = 44100
 +default-sample-format = s16le
-+default-sample-rate = 96000
++default-sample-rate = 44100
  ; alternate-sample-rate = 48000
 -; default-sample-channels = 2
 -; default-channel-map = front-left,front-right
@@ -58,7 +57,7 @@
 -; default-fragments = 4
 -; default-fragment-size-msec = 25
 +default-fragments = 4
-+default-fragment-size-msec = 25
++default-fragment-size-msec = 60
  
  ; enable-deferred-volume = yes
  ; deferred-volume-safety-margin-usec = 8000
