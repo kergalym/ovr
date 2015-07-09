@@ -23,7 +23,7 @@ DEPEND="
 	x11-libs/libX11
 	media-libs/alsa-lib
 	dev-libs/libxml2 
-	=media-sound/pulseaudio-2*
+	=media-sound/pulseaudio-5.0-r4
 	dev-libs/glib:2
 	dev-libs/gobject-introspection
 	=media-libs/mlt-0.8.2
