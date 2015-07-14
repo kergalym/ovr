@@ -32,7 +32,7 @@ WARNING_I2C="${PN} requires CONFIG_I2C to be enabled for most sensors."
 
 src_prepare() {
 	epatch "${FILESDIR}"/${P}-sensors-detect-gentoo.patch
-	epatch "${FILESDIR}"/${P}-3-init.d.patch
+	epatch "${FILESDIR}"/${PN}-3-init.d.patch
 
 	use sensord && { sed -i -e 's:^#\(PROG_EXTRA.*\):\1:' Makefile || die; }
 
