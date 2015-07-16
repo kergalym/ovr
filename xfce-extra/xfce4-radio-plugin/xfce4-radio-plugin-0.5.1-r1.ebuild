@@ -20,6 +20,7 @@ DEPEND="${RDEPEND}
 	dev-util/intltool
 	virtual/pkgconfig"
 
+WORKDIR="${{s}"
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-fix-libm-underlinking.patch"
@@ -27,6 +28,7 @@ src_prepare() {
 }
 
 pkg_setup() {
+#	cd ${S}
 	xdt-autogen
 	XFCONF=(
 		--libexecdir="${EPREFIX}"/usr/$(get_libdir)
