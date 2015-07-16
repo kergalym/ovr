@@ -27,6 +27,7 @@ src_prepare() {
 }
 
 pkg_setup() {
+	xdt-autogen
 	XFCONF=(
 		--libexecdir="${EPREFIX}"/usr/$(get_libdir)
 		$(xfconf_use_debug)
