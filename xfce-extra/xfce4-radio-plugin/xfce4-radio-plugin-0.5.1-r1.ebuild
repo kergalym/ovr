@@ -1,9 +1,10 @@
-# Copyright 1999-2012 Gentoo Foundation
+# Copyright 1999-2015 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
-# $Header: /var/cvsroot/gentoo-x86/xfce-extra/xfce4-radio-plugin/xfce4-radio-plugin-0.5.1.ebuild,v 1.6 2012/11/28 12:20:36 ssuominen Exp $
+# $Header: $
 
 EAPI=5
-inherit eutils multilib xfconf
+
+inherit eutils multilib 
 
 DESCRIPTION="V4L radio device control plug-in for the Xfce desktop environment"
 HOMEPAGE="http://goodies.xfce.org/projects/panel-plugins/xfce4-radio-plugin"
@@ -15,25 +16,22 @@ KEYWORDS="amd64 x86"
 IUSE="debug"
 
 RDEPEND=">=xfce-base/libxfcegui4-4.8
-	>=xfce-base/xfce4-panel-4.8"
+        >=xfce-base/xfce4-panel-4.8"
 DEPEND="${RDEPEND}
-	dev-util/intltool
-	virtual/pkgconfig"
+        dev-util/intltool
+        virtual/pkgconfig"
 
 WORKDIR="${S}"
 
 src_prepare() {
-	epatch "${FILESDIR}/${PN}-fix-libm-underlinking.patch"
+        epatch "${FILESDIR}/${PN}-fix-libm-underlinking.patch"
 
 }
 
-pkg_setup() {
-#	cd ${S}
-	xdt-autogen
-	XFCONF=(
-		--libexecdir="${EPREFIX}"/usr/$(get_libdir)
-		$(xfconf_use_debug)
-		)
-
-	DOCS=( AUTHORS NEWS README )
+src_configure() {
+        xdt-autogen 
+        econf --libexecdir="${EPREFIX}"/usr/$(get_libdir)
+        emake DESTDIR="${D}" install
+        dodoc  AUTHORS NEWS README 
 }
+
