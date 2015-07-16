@@ -20,7 +20,7 @@ DEPEND="${RDEPEND}
 	dev-util/intltool
 	virtual/pkgconfig"
 
-WORKDIR="${{s}"
+WORKDIR="${S}"
 
 src_prepare() {
 	epatch "${FILESDIR}/${PN}-fix-libm-underlinking.patch"
