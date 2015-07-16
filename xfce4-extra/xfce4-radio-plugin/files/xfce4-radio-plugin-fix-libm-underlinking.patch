@@ -1,0 +1,11 @@
+diff -ur xfce4-radio-plugin-0.5.1/configure.in xfce4-radio-plugin-0.5.1/configure.in
+--- xfce4-radio-plugin-0.5.1/configure.in	2011-06-19 15:15:19.000000000 +0200
++++ xfce4-radio-plugin-0.5.1/configure.in	2011-09-19 15:02:11.028999986 +0200
+@@ -41,6 +41,7 @@
+ dnl check for i18n support
+ XDT_I18N([ar ast ca cs da de el en_GB es eu fr gl hu id it ja lv nl pl pt_BR pt ru sq sv tr ug uk ur_PK ur zh_CN zh_TW ])
+ 
++AC_SEARCH_LIBS(sin, m)
+ dnl Check for debugging support
+ XDT_FEATURE_DEBUG()
+ 
