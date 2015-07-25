@@ -79,9 +79,9 @@ if [ -d "$BUILDDATA" ]; then
 elif [ ! -d "$BUILDDATA" ]; then
       echo "Build directory doesn't exist. Copying..."
       mkdir -p "$BUILDDATA"
-      cp /usr/share/livebuild-scripts/i386* "$BUILDDATA"
-      cp /usr/share/livebuild-scripts/amd64* "$BUILDDATA"
-      cp /usr/share/livebuild-scripts/scripts* "$BUILDDATA"
+      cp -r /usr/share/livebuild-scripts/i386* "$BUILDDATA"
+      cp -r /usr/share/livebuild-scripts/amd64* "$BUILDDATA"
+      cp -r /usr/share/livebuild-scripts/scripts* "$BUILDDATA"
 fi
 sleep 1
 
