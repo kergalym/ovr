@@ -160,20 +160,20 @@ iso() {
     mksquashfs $BUILDROOT $BUILDDATA/$ARCH/livedvd/$LIVE_IMAGE -comp xz -e $BUILDROOT/usr/portage/distfiles -e $BUILDROOT/usr/portage/packages  || die() { echo "$@" 1>&2 ; exit 1; }
     umount $LOOP_IMAGE $BUILDROOT 
 
-if [ -a "$ISO_NAME" ]; then
+if [ -a "$BUILDDATA"/"$ISO_NAME" ]; then
     echo -e "$ISO_NAME exists! \n"
     sleep 1
-    rm $ISO_NAME
+    rm $BUILDDATA/$ISO_NAME
     echo -e "Create ISO image"
     sleep 1
     echo -e "Gentoo" > $BUILDDATA/$ARCH/livedvd/livecd
-    mkisofs -R -J -o $ISO_NAME -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -iso-level 4 -boot-info-table $BUILDDATA/$ARCH/livedvd/  || die() { echo "$@" 1>&2 ; exit 1; }
+    mkisofs -R -J -o $BUILDDATA/$ISO_NAME -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -iso-level 4 -boot-info-table $BUILDDATA/$ARCH/livedvd/  || die() { echo "$@" 1>&2 ; exit 1; }
 else
     echo -e "Create ISO image \n"
     sleep 1
     echo -e "Gentoo" > $BUILDDATA/$ARCH/livedvd/livecd
-    mkisofs -R -J -o $ISO_NAME -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -iso-level 4 -boot-info-table $BUILDDATA/$ARCH/livedvd/  || die() { echo "$@" 1>&2 ; exit 1; }
-    isohybrid $ISO_NAME  || die() { echo "$@" 1>&2 ; exit 1; }
+    mkisofs -R -J -o $BUILDDATA/$ISO_NAME -b isolinux/isolinux.bin -c isolinux/boot.cat -no-emul-boot -boot-load-size 4 -iso-level 4 -boot-info-table $BUILDDATA/$ARCH/livedvd/  || die() { echo "$@" 1>&2 ; exit 1; }
+    isohybrid $BUILDDATA/$ISO_NAME  || die() { echo "$@" 1>&2 ; exit 1; }
 fi
 
 }
