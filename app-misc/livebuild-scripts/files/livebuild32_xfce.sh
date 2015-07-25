@@ -123,7 +123,7 @@ if  [ -e $BUILDDATA/.work.session ] ; [ -a $LOOP_IMAGE ] ; then
     echo -e "Tarballs exists. \n"
     echo "Session exist"
     exit 1
-else 
+elif [ ! -e $BUILDDATA/stage3-amd64.tar.bz2 ] ; [ ! -a $BUILDDATA/portage-latest.tar.xz ] ; then
     echo -e "Downloading Stage3"
     sleep 1
     wget -c -O $BUILDDATA/stage3-i686.tar.bz2 $STAGE3
@@ -143,7 +143,7 @@ else
     cp -L /etc/resolv.conf $BUILDROOT/etc/
     echo -e "Unpacking Portage \n"
     sleep 1
-    tar xpf $BUILDDATA/portage*.tar.bz2 -C $BUILDROOT/usr 2> $BUILDROOT/buildport.log
+    tar xpf $BUILDDATA/portage*.tar.xz -C $BUILDROOT/usr 2> $BUILDROOT/buildport.log
     touch $BUILDDATA/.work.session
     echo -e "Stage3 & Portage Unpacked \n" 
     sleep 1
