@@ -103,6 +103,7 @@ start() {
 	  sed -i 's/#source/source"/g' $BUILDROOT/etc/portage/make32.conf >/dev/null 
 	  rm $BUILDROOT/etc/portage/make.conf
 	  ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
+	  chroot ${BUILDROOT} /bin/bash
   fi
 
 }
