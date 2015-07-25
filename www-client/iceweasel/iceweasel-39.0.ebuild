@@ -348,6 +348,7 @@ src_install() {
 	for size in ${sizes}; do
 		insinto "/usr/share/icons/hicolor/${size}x${size}/apps"
 		newins "${icon_path}/iceweasel${size}.png" "${icon}.png"
+		newins "${icon_path}/default${size}.png" "${icon}.png"
 	done
 	# The 128x128 icon has a different name
 	insinto "/usr/share/icons/hicolor/128x128/apps"
