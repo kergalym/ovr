@@ -99,7 +99,6 @@ start() {
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
 	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
 	  tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/{home/user,root} 
-	  sed -i 's/#source/source"/g' $BUILDROOT/etc/portage/make32.conf >/dev/null 
 	  rm $BUILDROOT/etc/portage/make.conf
 	  ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
 	  cp $BUILDROOT/etc/kernels/.config $BUILDDATA/scripts/kernel-config 
