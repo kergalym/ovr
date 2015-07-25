@@ -119,9 +119,10 @@ stop() {
 
 buildroot() {
 
-if  [ -e $HOME/.work.session ] ; [ -a $LOOP_IMAGE ] ; then
+if  [ -e $BUILDDATA/.work.session ] ; [ -a $LOOP_IMAGE ] ; then
     echo -e "Tarballs exists. \n"
     echo "Session exist"
+    exit 1
 else 
     echo -e "Downloading Stage3"
     sleep 1
