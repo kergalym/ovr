@@ -386,7 +386,7 @@ src_install() {
 	# revdep-rebuild entry
 	insinto /etc/revdep-rebuild
 	echo "SEARCH_DIRS_MASK=${MOZILLA_FIVE_HOME}" >> ${T}/10firefox
-	doins "${T}"/10${PN} || die
+	doins "${T}"/10firefox || die
 }
 
 pkg_preinst() {
