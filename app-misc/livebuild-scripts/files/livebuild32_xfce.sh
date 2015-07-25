@@ -87,21 +87,22 @@ start() {
    echo "Mounting chroot"
    mount $LOOP_IMAGE $BUILDROOT
    cp -L /etc/resolv.conf $BUILDROOT/etc/
-   cp $BUILDDATA/scripts/kernel-config $BUILDROOT/usr/src/linux/.config
+   cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
    cp $BUILDDATA/scripts/installation-helper.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
    ln -sv $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper.sh
    cp $BUILDDATA/scripts/stage3.configs.tar  $BUILDROOT/
-   cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
-   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/ 
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
    mount -t proc none $BUILDROOT/proc >/dev/null &
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
    if [ ${MACHINE_TYPE} == 'i686' ]; then
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
+	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
+	  tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/{home/user,root} 
 	  sed -i 's/#source/source"/g' $BUILDROOT/etc/portage/make32.conf >/dev/null 
 	  rm $BUILDROOT/etc/portage/make.conf
 	  ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
+	  cp $BUILDROOT/etc/kernels/.config $BUILDDATA/scripts/kernel-config 
 	  chroot ${BUILDROOT} /bin/bash
   fi
 
