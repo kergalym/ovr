@@ -19,7 +19,8 @@
 ### along with this program; if not, write to the Free Software
 ### Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-source /usr/share/livebuild-scripts/livebuild32.conf
+configfile="/etc/livebuild-scripts/livebuild32.conf"
+source "$configfile"
 
 function set_root
 {
@@ -70,7 +71,15 @@ if grep -q sys-devel/gcc /var/lib/portage/world ; then
 else
       echo -e "You'll need installed $REQS to continue \n"
       emerge sys-devel/gcc
-fi      
+fi 
+if [ -d "$BUILDDATA" ]; then
+      echo "Build directory exist. Not copying, please clean it manually."
+else
+      echo "Build directory doesn't exist. Copying..."
+      cp /usr/share/livebuild-scripts/i386* "$BUILDDATA"
+      cp /usr/share/livebuild-scripts/amd64* "$BUILDDATA"
+      cp /usr/share/livebuild-scripts/scripts* "$BUILDDATA"
+fi
 sleep 1
 
 start() {
