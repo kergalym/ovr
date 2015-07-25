@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<repositories version="1.0">
+  <repo priority="50" quality="experimental" status="unofficial">
+    <name>ovr</name>
+    <description>Packages not maintained elsewhere</description>
+    <homepage>https://github.com/kergalym</homepage>
+    <owner>
+      <email>kegalym2@mail.ru</email>
+    </owner>
+    <source type="git">https://github.com/kergalym/ovr.git</source>
+  </repo>
+</repositories>
