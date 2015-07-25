@@ -19,17 +19,7 @@
 ### along with this program; if not, write to the Free Software
 ### Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-MACHINE_TYPE=`uname -m`
-BUILDDATA="/usr/share/livebuild-scripts"
-BUILDROOT="/mnt/gentoo"
-ARCH="i386_xfce"
-LOOP_IMAGE="/media/WDGR/live_xfce.img"
-ISO_NAME="Gentoo_Linux_XFCE_i686.iso"
-LIVE_IMAGE="livecd.squashfs"
-STAGE3="http://mirror.neolabs.kz/gentoo/pub/releases/x86/autobuilds/current-stage3-i686/stage3-i686-20150707.tar.bz2"
-PORTS="http://distfiles.gentoo.org/snapshots/portage-20140823.tar.bz2"
-REQS="'sys-fs/e2fsprogs app-cdr/cdrtools sys-fs/squashfs-tools sys-boot/syslinux'"
-FILES="portage*.tar.bz2 stage3*.tar.bz2"
+source livebuild32.conf
 
 function set_root
 {
