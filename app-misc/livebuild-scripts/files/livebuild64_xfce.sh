@@ -136,10 +136,10 @@ if  [ -e $BUILDDATA/.work.session ] ; [ -a $LOOP_IMAGE ] ; then
 else 
     echo -e "Downloading Stage3"
     sleep 1
-    wget -c -O $HOME/stage3-amd64.tar.bz2 $STAGE3
+    wget -c -O $BUILDDATA/stage3-amd64.tar.bz2 $STAGE3
     echo -e "Downloading Portage"
     sleep 1
-    wget -c -O $HOME/portage-latest.tar.bz2 $PORTS
+    wget -c -O $BUILDDATA/portage-latest.tar.bz2 $PORTS
     echo -e "Create block device \n"
     sleep 1
     dd if=/dev/zero of=$LOOP_IMAGE bs=1024K count=20000  || die() { echo "$@" 1>&2 ; exit 1; }
@@ -149,12 +149,12 @@ else
     mount $LOOP_IMAGE $BUILDROOT
     echo -e "Unpacking Stage3 \n"
     sleep 1
-    tar xpf $HOME/stage3*amd64*.tar.bz2 -C $BUILDROOT 2> $BUILDROOT/build.log
+    tar xpf $BUILDDATA/stage3*amd64*.tar.bz2 -C $BUILDROOT 2> $BUILDROOT/build.log
     cp -L /etc/resolv.conf $BUILDROOT/etc/
     echo -e "Unpacking Portage \n"
     sleep 1
-    tar xpf $HOME/portage*.tar.bz2 -C $BUILDROOT/usr 2> $BUILDROOT/buildport.log
-    touch $HOME/.work.session
+    tar xpf $BUILDDATA/portage*.tar.bz2 -C $BUILDROOT/usr 2> $BUILDROOT/buildport.log
+    touch $BUILDDATA/.work.session
     echo -e "Stage3 & Portage Unpacked \n" 
     sleep 1
 fi
