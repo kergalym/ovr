@@ -33,9 +33,9 @@ src_install() {
  cp -r "${WORKDIR}"/i386 ${D}/usr/share/livebuild-scripts/ || die
  cp -r "${WORKDIR}"/i386_xfce ${D}/usr/share/livebuild-scripts/ || die
  cp -r "${WORKDIR}"/scripts ${D}/usr/share/livebuild-scripts/ || die
- dodir "/usr/bin"
- insinto ${S}/livebuild64_xfce.sh 
- insinto ${S}/livebuild32_xfce.sh
+ dodir "/usr/bin/"
+ cp ${S}/livebuild64_xfce.sh ${D}/usr/bin/ || die
+ cp ${S}/livebuild32_xfce.sh ${D}/usr/bin/ || die
 }
 
 pkg_postinst() {
