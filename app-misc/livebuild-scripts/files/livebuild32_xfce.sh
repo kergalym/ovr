@@ -22,19 +22,10 @@
 configfile="/etc/livebuild-scripts/livebuild32.conf"
 source "$configfile"
 
-function set_root
-{
-  if [[ $(id -u) -ne 0 ]]; then
-    sudo bash -c "exit" 2> /dev/null
-    if [[ $? -ne 0 ]]; then
-      echo "Unable to start, need root privileges"
-      return 1
-    fi
-    sudo bash ${@:1}
-    exit $?
-  fi
-  return 0
-}
+if [ "$EUID" -ne 0 ]
+   then echo "Please run as root"
+     exit
+fi
 
 if [ ${MACHINE_TYPE} == 'x86_64' ]; then
     echo "Building 64-bit system cannot be performed on your 32-bit host system"
@@ -90,17 +81,16 @@ start() {
    cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
    cp $BUILDDATA/scripts/installation-helper.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
    ln -sv $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper.sh
-   cp $BUILDDATA/scripts/stage3.configs.tar  $BUILDROOT/
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
    mount -t proc none $BUILDROOT/proc >/dev/null &
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
    if [ ${MACHINE_TYPE} == 'i686' ]; then
+          rm $BUILDROOT/etc/portage/make.conf
+          ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
 	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
 	  tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/{home/user,root} 
-	  rm $BUILDROOT/etc/portage/make.conf
-	  ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
 	  cp $BUILDROOT/etc/kernels/.config $BUILDDATA/scripts/kernel-config 
 	  chroot ${BUILDROOT} /bin/bash
   fi
@@ -147,6 +137,7 @@ elif [ ! -e $BUILDDATA/stage3-amd64.tar.bz2 ] ; [ ! -a $BUILDDATA/portage-latest
     touch $BUILDDATA/.work.session
     echo -e "Stage3 & Portage Unpacked \n" 
     sleep 1
+    cp -r $BUILDDATA/{etc,var} $BUILDROOT/
 fi
 
 }

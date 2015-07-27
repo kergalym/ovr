@@ -1,0 +1,85 @@
+# required by app-misc/xorg-configs (argument)
+=app-misc/xorg-configs-1.0 
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=x11-apps/ccsm-0.8.4-r6 
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=x11-plugins/compiz-plugins-extra-0.8.8 
+# required by x11-plugins/compiz-plugins-unsupported (argument)
+=x11-plugins/compiz-plugins-unsupported-0.8.6 
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=x11-plugins/compiz-plugins-main-0.8.8 
+# required by x11-plugins/compiz-plugins-main-0.8.8::stuff
+# required by x11-plugins/compiz-plugins-extra-0.8.8::stuff
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=x11-libs/compiz-bcop-0.8.8 
+# required by x11-wm/compiz-fusion (argument)
+=x11-wm/compiz-fusion-0.8.8 
+# required by x11-plugins/compiz-plugins-extra-0.8.8::stuff
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=x11-wm/compiz-0.8.8-r3 
+# required by dev-python/compizconfig-python-0.8.4-r5::gentoo
+# required by x11-apps/ccsm-0.8.4-r6::stuff
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=x11-libs/libcompizconfig-0.8.8 
+# required by x11-apps/ccsm-0.8.4-r6::stuff
+# required by x11-wm/compiz-fusion-0.8.8::stuff
+# required by x11-wm/compiz-fusion (argument)
+=dev-python/compizconfig-python-0.8.4-r5 
+# required by media-video/openshot (argument)
+=media-video/openshot-1.4.3 **
+# required by media-video/lives (argument)
+=media-video/lives-1.4.6 
+www-client/firefox
+=dev-libs/nss-3.19.2 
+# required by sys-fs/aufs-util-4.0_p20150420::gentoo
+# required by sys-fs/aufs4-0_pre20150629::gentoo
+# required by sys-fs/aufs4 (argument)
+=sys-fs/aufs-headers-4.0_p20150420 
+# required by sys-fs/aufs4 (argument)
+=sys-fs/aufs4-0_pre20150629 
+# required by sys-fs/aufs4-0_pre20150629::gentoo
+# required by sys-fs/aufs4 (argument)
+=sys-fs/aufs-util-4.0_p20150420 
+# required by =sys-kernel/aufs-sources-4.0.5 (argument)
+=sys-kernel/aufs-sources-4.0.5 
+# required by flush (argument)
+=net-p2p/flush-0.9.12 
+# required by jitsi (argument)
+=net-im/jitsi-2.2-r1 **
+# required by =net-p2p/flush-0.9.11 (argument)
+=net-p2p/flush-0.9.11 
+# required by media-fonts/infinality-ultimate-meta (argument)
+=media-fonts/infinality-ultimate-meta-1 
+# required by media-fonts/infinality-ultimate-meta-1::gentoo[latin,free]
+# required by media-fonts/infinality-ultimate-meta (argument)
+=media-fonts/tex-gyre-2.005 
+# required by media-fonts/infinality-ultimate-meta-1::gentoo[latin,free]
+# required by media-fonts/infinality-ultimate-meta (argument)
+=media-fonts/signika-1.001 
+# required by media-fonts/infinality-ultimate-meta-1::gentoo[latin,free]
+# required by media-fonts/infinality-ultimate-meta (argument)
+=media-fonts/courier-prime-1.203 
+# required by media-fonts/infinality-ultimate-meta-1::gentoo[free]
+# required by media-fonts/infinality-ultimate-meta (argument)
+=media-fonts/heuristica-0.2.1 
+# required by media-fonts/infinality-ultimate-meta-1::gentoo
+# required by media-fonts/infinality-ultimate-meta (argument)
+=media-libs/fontconfig-ultimate-2015.04 
+# required by @selected
+# required by @world (argument)
+=xfce-extra/xfce4-indicator-plugin-2.3.3-r1 
+# required by xfce-extra/xfce4-indicator-plugin-2.3.3-r1::gentoo
+# required by @selected
+# required by @world (argument)
+=dev-libs/libindicator-12.10.1-r301 
+
+# required by =sys-boot/grub-2.02_beta2-r8 (argument)
+=sys-boot/grub-2.02_beta2-r8 
+# required by eselect-timezone (argument)
+=app-eselect/eselect-timezone-0.2 

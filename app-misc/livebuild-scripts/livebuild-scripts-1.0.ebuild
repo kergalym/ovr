@@ -8,11 +8,10 @@ inherit eutils
 
 DESCRIPTION="Live System Build Scripts"
 HOMEPAGE="https://github.com/kergalym/livebuild-gentoo"
-SRC_URI="${FILESDIR}/livebuild.data.tar.xz"
+SRC_URI=""
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="~amd64 ~x86"
-RESTRICT="fetch"
 S="${FILESDIR}"
 
 RDEPEND="sys-devel/gcc
@@ -22,17 +21,13 @@ sys-fs/squashfs-tools
 sys-boot/syslinux 
 >=app-misc/livedvd-configs-1.0"
 
-src_unpack() {
-    unpack "${A}"
-}
-
 src_install() {
  dodir "/usr/share/livebuild-scripts"
- cp -r "${WORKDIR}"/amd64 ${D}/usr/share/livebuild-scripts/ || die
- cp -r "${WORKDIR}"/amd64_xfce ${D}/usr/share/livebuild-scripts/ || die
- cp -r "${WORKDIR}"/i386 ${D}/usr/share/livebuild-scripts/ || die
- cp -r "${WORKDIR}"/i386_xfce ${D}/usr/share/livebuild-scripts/ || die
- cp -r "${WORKDIR}"/scripts ${D}/usr/share/livebuild-scripts/ || die
+ cp -r "${S}"/amd64 ${D}/usr/share/livebuild-scripts/ || die
+ cp -r "${S}"/amd64_xfce ${D}/usr/share/livebuild-scripts/ || die
+ cp -r "${S}"/i386 ${D}/usr/share/livebuild-scripts/ || die
+ cp -r "${S}"/i386_xfce ${D}/usr/share/livebuild-scripts/ || die
+ cp -r "${S}"/scripts ${D}/usr/share/livebuild-scripts/ || die
  dodir "/etc/livebuild-scripts"
  cp ${S}/livebuild32.conf ${D}/etc/livebuild-scripts/ || die
  cp ${S}/livebuild64.conf ${D}/etc/livebuild-scripts/ || die
