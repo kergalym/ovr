@@ -84,6 +84,8 @@ start() {
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
    cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/etc/skel 
    cp $BUILDDATA/scripts/installation-helper64.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
    mount -t proc none $BUILDROOT/proc >/dev/null &
@@ -92,7 +94,6 @@ start() {
    if [ ${MACHINE_TYPE} == 'x86_64' ]; then
 	  linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
 	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
-	  tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/{home/user,root} 
 	  rm $BUILDROOT/etc/portage/make.conf
 	  ln -s $BUILDROOT/etc/portage/make64.conf $BUILDROOT/etc/portage/make.conf
 	  linux32 chroot ${BUILDROOT} /bin/bash

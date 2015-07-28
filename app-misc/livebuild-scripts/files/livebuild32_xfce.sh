@@ -79,6 +79,9 @@ start() {
    mount $LOOP_IMAGE $BUILDROOT
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
+   cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/etc/skel 
    cp $BUILDDATA/scripts/installation-helper.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
    ln -sv $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper.sh
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
@@ -90,8 +93,6 @@ start() {
           ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
 	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
-	  tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/{home/user,root} 
-	  cp $BUILDROOT/etc/kernels/.config $BUILDDATA/scripts/kernel-config 
 	  chroot ${BUILDROOT} /bin/bash
   fi
 
