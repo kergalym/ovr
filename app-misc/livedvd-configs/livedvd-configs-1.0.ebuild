@@ -22,8 +22,8 @@ media-libs/alsa-lib
 net-fs/samba"
 
 src_install() {
- dodir "/etc/portage/envx11-drivers"
- insinto "/etc/portage/envx11-drivers"
+ dodir "/etc/portage/env/x11-drivers"
+ insinto "/etc/portage/env/x11-drivers"
  doins "${S}/nvidia-drivers" || die
  doins "${S}/ati-drivers" || die
  dodir "/etc/pm/power.d/"
