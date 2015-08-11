@@ -91,13 +91,13 @@ start() {
    mount -t proc none $BUILDROOT/proc >/dev/null &
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
-   if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+   if [ ${MACHINE_TYPE} == 'i686' ]; then
 	  linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
 	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
 	  rm $BUILDROOT/etc/portage/make.conf
 	  ln -s $BUILDROOT/etc/portage/make64.conf $BUILDROOT/etc/portage/make.conf
 	  linux32 chroot ${BUILDROOT} /bin/bash
-   elif  [ ${MACHINE_TYPE} == 'i686' ]; then
+   elif  [ ${MACHINE_TYPE} == 'x86_64' ]; then
            rm $BUILDROOT/etc/portage/make.conf
            ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
