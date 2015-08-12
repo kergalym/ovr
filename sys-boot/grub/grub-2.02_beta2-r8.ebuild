@@ -310,6 +310,7 @@ pkg_postinst() {
 			mkdir -p "${ROOT%/}/boot/grub"
 			ln -s ../grub2/grub.cfg "${ROOT%/}/boot/grub/grub.cfg"
 		fi
+	sed -i s'/GRUB_CMDLINE_LINUX_DEFAULT="GRUB_CMDLINE_LINUX_DEFAULT=/GRUB_CMDLINE_LINUX_DEFAULT=/' ${ROOT%/}/boot/grub2/grub.cfg	
 	fi
 
 	mount-boot_pkg_postinst
