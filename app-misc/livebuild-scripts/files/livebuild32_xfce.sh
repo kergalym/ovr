@@ -80,6 +80,7 @@ start() {
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
    cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
+   rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/etc/skel 
    cp $BUILDDATA/scripts/installation-helper.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
