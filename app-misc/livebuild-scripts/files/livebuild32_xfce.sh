@@ -90,7 +90,7 @@ start() {
           ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
           chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
           cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
-          linux chroot ${BUILDROOT} /bin/bash
+          linux32 chroot ${BUILDROOT} /bin/bash
    elif [ ${MACHINE_TYPE} == 'i686' ]; then
           rm $BUILDROOT/etc/portage/make.conf
           ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
