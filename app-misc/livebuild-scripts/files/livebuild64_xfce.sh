@@ -19,7 +19,7 @@
 ### along with this program; if not, write to the Free Software
 ### Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-configfile="/etc/livebuild-scripts/livebuild64.conf"
+configfile="/etc/livebuild-scripts/livebuild.conf"
 source "$configfile"
 
 if [ "$EUID" -ne 0 ]
@@ -31,7 +31,7 @@ if [ ${MACHINE_TYPE} == 'x86_64' ]; then
     echo "Starting build 64-bit system on 64-bit host system"
     sleep 1
 elif  [ ${MACHINE_TYPE} == 'i686' ]; then
-    echo "Starting build 32-bit system on 32-bit host system"
+    echo "You cannot build 64-bit system on 32-bit host system"
     sleep 1
 fi
 
@@ -84,10 +84,13 @@ start() {
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
    cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
-   rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config
-   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
+   rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config $BUILDROOT/home/user/.config
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/home/user 
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/etc/skel 
    cp $BUILDDATA/scripts/installation-helper64.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
+   rm $BUILDROOT/usr/sbin/installation-helper
+   ln -sv $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
    mount -t proc none $BUILDROOT/proc >/dev/null &
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &

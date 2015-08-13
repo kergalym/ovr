@@ -19,7 +19,7 @@
 ### along with this program; if not, write to the Free Software
 ### Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
-configfile="/etc/livebuild-scripts/livebuild32.conf"
+configfile="/etc/livebuild-scripts/livebuild.conf"
 source "$configfile"
 
 if [ "$EUID" -ne 0 ]
@@ -27,12 +27,6 @@ if [ "$EUID" -ne 0 ]
      exit
 fi
 
-if [ ${MACHINE_TYPE} == 'x86_64' ]; then
-    echo "Building 64-bit system cannot be performed on your 32-bit host system"
-elif  [ ${MACHINE_TYPE} == 'i686' ]; then
-    echo "Starting build 32-bit system on 32-bit host system"
-fi
-  
 if grep -q sys-fs/e2fsprogs /var/lib/portage/world ; then
       echo "Required packages has been installed"
 else
@@ -80,16 +74,24 @@ start() {
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
    cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
-   rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config
+   rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config $BUILDROOT/home/user/.config
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
+   tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/home/user
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/etc/skel 
    cp $BUILDDATA/scripts/installation-helper.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
-   ln -sv $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper.sh
+   rm $BUILDROOT/usr/sbin/installation-helper
+   ln -s $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
    mount -t proc none $BUILDROOT/proc >/dev/null &
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
-   if [ ${MACHINE_TYPE} == 'i686' ]; then
+   if [ ${MACHINE_TYPE} == 'x86_64' ]; then
+          rm $BUILDROOT/etc/portage/make.conf
+          ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
+          chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
+          cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
+          linux chroot ${BUILDROOT} /bin/bash
+   elif [ ${MACHINE_TYPE} == 'i686' ]; then
           rm $BUILDROOT/etc/portage/make.conf
           ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
