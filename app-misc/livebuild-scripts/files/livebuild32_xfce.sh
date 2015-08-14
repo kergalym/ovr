@@ -62,6 +62,9 @@ if [ -d "$BUILDDATA" ]; then
       rm -rf $BUILDDATA/i386*
       rm -rf $BUILDDATA/amd64*
       rm -rf $BUILDDATA/scripts*
+      cp -r /usr/share/livebuild-scripts/i386* "$BUILDDATA"
+      cp -r /usr/share/livebuild-scripts/amd64* "$BUILDDATA"
+      cp -r /usr/share/livebuild-scripts/scripts* "$BUILDDATA"
 else
       echo "Build directory doesn't exist. Copying..."
       mkdir -p "$BUILDDATA"
