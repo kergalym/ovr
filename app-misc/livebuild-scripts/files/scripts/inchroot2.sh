@@ -48,7 +48,8 @@ else
 fi
 if grep -q livedvd-configs /var/lib/portage/world; then
 	echo "livedvd-configs is installed";
-else    
+else 
+	echo "=app-misc/livedvd-configs-1.0" >> /etc/portage/package.keywords
 	emerge app-misc/livedvd-configs
 	genkernel all --no-clean --oldconfig --menuconfig --unionfs --all-ramdisk-modules --splash --splash=livecd-12.0 --splash-res=1024x768 --makeopts=-j2 && emerge @module-rebuild
 fi
