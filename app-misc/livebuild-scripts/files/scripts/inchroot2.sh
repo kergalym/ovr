@@ -104,6 +104,8 @@ export QT_IM_MODULE=ibus
 export PS1="\[\e[00;36m\]\d\[\e[0m\]\[\e[00;33m\]_\[\e[0m\]\[\e[00;31m\]\@\[\e[0m\]\[\e[00;33m\]\\$\[\e[0m\]"
 EOF
 
+source /etc/bash/bashrc
+
 if grep -q layman /var/lib/portage/world; then
 	echo "layman is installed";
 else    
