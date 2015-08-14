@@ -28,33 +28,33 @@ if [ "$EUID" -ne 0 ]
 fi
 
 if grep -q sys-fs/e2fsprogs /var/lib/portage/world ; then
-      echo "Required packages has been installed"
+      echo "'sys-fs/e2fsprogs' has been installed"
 else
-      echo -e "You'll need installed $REQS to continue \n"
+      echo -e "You'll need installed 'sys-fs/e2fsprogs' to continue \n"
       emerge sys-fs/e2fsprogs
 fi 
 if grep -q app-cdr/cdrtools /var/lib/portage/world ; then
-      echo "Required packages has been installed"
+      echo "'app-cdr/cdrtools' has been installed"
 else
-      echo -e "You'll need installed $REQS to continue \n"
+      echo -e "You'll need installed 'app-cdr/cdrtools' to continue \n"
       emerge app-cdr/cdrtools
 fi
 if grep -q sys-fs/squashfs-tools /var/lib/portage/world ; then
-      echo "Required packages has been installed"
+      echo "'sys-fs/squashfs-tools' has been installed"
 else
-      echo -e "You'll need installed $REQS to continue \n"
+      echo -e "You'll need installed 'sys-fs/squashfs-tools' to continue \n"
       emerge sys-fs/squashfs-tools
 fi 
 if grep -q sys-boot/syslinux /var/lib/portage/world ; then
-      echo "Required packages has been installed"
+      echo "'sys-boot/syslinux' has been installed"
 else
-      echo -e "You'll need installed $REQS to continue \n"
+      echo -e "You'll need installed 'sys-boot/syslinux' to continue \n"
       emerge sys-boot/syslinux
 fi
 if grep -q sys-devel/gcc /var/lib/portage/world ; then
-      echo "Required packages has been installed"
+      echo "'sys-devel/gcc' has been installed"
 else
-      echo -e "You'll need installed $REQS to continue \n"
+      echo -e "You'll need installed 'sys-devel/gcc' to continue \n"
       emerge sys-devel/gcc
 fi 
 if [ -d "$BUILDDATA" ]; then
@@ -71,8 +71,9 @@ start() {
 
    echo "Mounting chroot"
    mount $LOOP_IMAGE $BUILDROOT
+   cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
    cp -L /etc/resolv.conf $BUILDROOT/etc/
-   cp $BUILDDATA/scripts/kernel-config $BUILDROOT/etc/kernels/.config
+   cp $BUILDDATA/scripts/*x86* $BUILDROOT/etc/kernels/*x86*
    cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
    rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config $BUILDROOT/home/user/.config
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
@@ -80,23 +81,23 @@ start() {
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/etc/skel 
    cp $BUILDDATA/scripts/installation-helper.sh $BUILDROOT/usr/local/sbin/installation-helper.sh
    rm $BUILDROOT/usr/sbin/installation-helper
-   ln -s $BUILDROOT/usr/local/sbin/installation-helper.sh $BUILDROOT/usr/sbin/installation-helper
+   chroot ${BUILDROOT} /bin/bash -c 'ln -s /usr/local/sbin/installation-helper.sh /usr/sbin/installation-helper'
    chmod +x $BUILDROOT/usr/local/sbin/installation-helper.sh
    mount -t proc none $BUILDROOT/proc >/dev/null &
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
    if [ ${MACHINE_TYPE} == 'x86_64' ]; then
           rm $BUILDROOT/etc/portage/make.conf
-          ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
-          chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
-          cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
+          linux32 chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32.conf /portage/make.conf'
+          linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
           linux32 chroot ${BUILDROOT} /bin/bash
+	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/*x86*
    elif [ ${MACHINE_TYPE} == 'i686' ]; then
           rm $BUILDROOT/etc/portage/make.conf
-          ln -s $BUILDROOT/etc/portage/make32.conf $BUILDROOT/etc/portage/make.conf
+          chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32.conf /portage/make.conf'
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
-	  cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
 	  chroot ${BUILDROOT} /bin/bash
+	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/*x86*
   fi
 
 }
