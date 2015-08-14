@@ -108,6 +108,7 @@ source /etc/bash/bashrc
 
 if grep -q layman /var/lib/portage/world; then
 	echo "layman is installed";
+	sed -i s'/#source/source/'g /etc/portage/make.conf
 else    
 	emerge layman  
 	layman -f -o https://raw.githubusercontent.com/kergalym/ovr/master/repositories.xml -a ovr
