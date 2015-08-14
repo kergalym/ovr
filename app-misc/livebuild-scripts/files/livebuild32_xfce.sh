@@ -58,9 +58,13 @@ else
       emerge sys-devel/gcc
 fi 
 if [ -d "$BUILDDATA" ]; then
-      echo "Build directory exist. Not copying, please clean it manually."
+      echo "Build directory exist. Updating..."
+      rm -rf $BUILDDATA/i386*
+      rm -rf $BUILDDATA/amd64*
+      rm -rf $BUILDDATA/scripts*
 else
       echo "Build directory doesn't exist. Copying..."
+      mkdir -p "$BUILDDATA"
       cp -r /usr/share/livebuild-scripts/i386* "$BUILDDATA"
       cp -r /usr/share/livebuild-scripts/amd64* "$BUILDDATA"
       cp -r /usr/share/livebuild-scripts/scripts* "$BUILDDATA"
@@ -89,13 +93,13 @@ start() {
    if [ ${MACHINE_TYPE} == 'x86_64' ]; then
           rm $BUILDROOT/etc/portage/make.conf
           linux32 chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32.conf /etc/portage/make.conf'
-          linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
+          linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done  && /inchroot2.sh && rm /inchroot*"
           linux32 chroot ${BUILDROOT} /bin/bash
 	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/
    elif [ ${MACHINE_TYPE} == 'i686' ]; then
           rm $BUILDROOT/etc/portage/make.conf
           chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32.conf /etc/portage/make.conf'
-	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done"
+	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done && /inchroot2.sh && rm /inchroot*"
 	  chroot ${BUILDROOT} /bin/bash
 	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/
   fi
