@@ -1,7 +1,7 @@
 #!/bin/bash
 USER="user"
 
-cat  /etc/bash/bashrc
+cat <<EOF >  /etc/bash/bashrc
 # /etc/bash/bashrc
 #
 # This file is sourced by all *interactive* bash shells on startup,
