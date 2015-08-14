@@ -13,8 +13,7 @@ else
     echo $TIMECOUNTRY > /etc/timezone >/dev/null & 
 fi
 if grep -q genxfce /etc/conf.d/hostname; then
-    echo "Hostname is configured already"; 
-else 
+    echo "Hostname is configured already";  
 else
     sed -i 's/localhost/genxfce/g' /etc/conf.d/hostname >/dev/null &
 fi
