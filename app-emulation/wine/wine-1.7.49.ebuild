@@ -12,7 +12,7 @@ inherit autotools-utils eutils fdo-mime flag-o-matic gnome2-utils l10n multilib 
 
 #if [[ ${PV} == "9999" ]] ; then
 	EGIT_REPO_URI="https://github.com/iXit/wine.git"
-	EGIT_COMMIT="906d11a7adc6bd152b0f69055eb1b65e153ba1c4"
+	EGIT_COMMIT="7f4c968810c5432fdab405e3fe4c58e4d1e30ec3"
 	inherit git-2
 	SRC_URI=""
 	#KEYWORDS=""
