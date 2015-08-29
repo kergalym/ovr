@@ -48,7 +48,7 @@ SRC_URI="${SRC_URI}
 
 LICENSE="LGPL-2.1"
 SLOT="0"
-IUSE="+abi_x86_32 +abi_x86_64 +alsa capi cups custom-cflags dos elibc_glibc +fontconfig +gecko gphoto2 gsm gstreamer +jpeg lcms ldap +mono mp3 ncurses netapi nls odbc openal opencl +opengl osmesa oss +perl pipelight +png +prelink pulseaudio +realtime +run-exes samba scanner selinux +ssl test +threads +truetype +udisks v4l +X xcomposite xinerama +xml nine"
+IUSE="+abi_x86_32 +abi_x86_64 +alsa capi cups custom-cflags dos elibc_glibc +fontconfig +gecko gphoto2 gsm gstreamer +jpeg lcms ldap +mono mp3 ncurses netapi nls odbc openal opencl +opengl osmesa oss +perl pipelight +png +prelink pulseaudio +realtime +run-exes samba scanner selinux +ssl test +threads +truetype +udisks v4l +X xcomposite xinerama +xml d3d9"
 REQUIRED_USE="|| ( abi_x86_32 abi_x86_64 )
 	test? ( abi_x86_32 )
 	elibc_glibc? ( threads )
@@ -93,7 +93,7 @@ NATIVE_DEPEND="
 	mp3? ( >=media-sound/mpg123-1.5.0 )
 	netapi? ( net-fs/samba[netapi(+)] )
 	nls? ( sys-devel/gettext )
-	nine? ( media-libs/mesa[nine] )
+	d3d9? ( media-libs/mesa[d3d9] )
 	odbc? ( dev-db/unixODBC:= )
 	osmesa? ( media-libs/mesa[osmesa] )
 	pipelight? ( sys-apps/attr )
@@ -134,7 +134,7 @@ COMMON_DEPEND="
 				app-emulation/emul-linux-x86-sdl[development,-abi_x86_32(-)]
 				>=media-libs/openal-1.15.1[abi_x86_32(-)]
 			) )
-			nine? ( media-libs/mesa[abi_x86_32] )
+			d3d9? ( media-libs/mesa[abi_x86_32] )
 			gstreamer? ( || (
 				app-emulation/emul-linux-x86-medialibs[development,-abi_x86_32(-)]
 				(
@@ -336,7 +336,7 @@ src_prepare() {
 		PATCHES+=( "../${PULSE_PATCHES}"/gstreamer/*.patch )
 	fi
 
-	#use nine && PATCHES+=(
+	#use d3d9 && PATCHES+=(
 	#	"${DISTDIR}/${NINE_PATCH}"
 	#)
 
