@@ -371,7 +371,7 @@ multilib_src_configure() {
 		$(use_with capi)
 		$(use_with lcms cms)
 		$(use_with cups)
-		$(use_with nine d3dadapter9)
+		$(use_with d3d9 d3dadapter9)
 		$(use_with ncurses curses)
 		$(use_with udisks dbus)
 		$(use_with fontconfig)
