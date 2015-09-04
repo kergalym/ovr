@@ -56,10 +56,10 @@ fi
 fdisk -l | sed -n 's/^Disk \(\/dev\/[^:]*\): \([^,]*\).*$/"\1" "\2" \\/p' >> $TMP/drivelist
 
 while [ 0 ]; do
-echo dialog --ok-label Select \
---cancel-label Continue \
---title \"PARTITIONING\" \
---menu \"Select drive to partition:\" 11 40 4 \\\
+echo dialog --ok-label Выбрать \
+--cancel-label Продолжить \
+--title \"РАЗБИВКА\" \
+--menu \"Выберите диск для разбивки разделов:\" 11 40 4 \\\
 > $TMP/tmpscript
 cat $TMP/drivelist >> $TMP/tmpscript
 echo "2> $TMP/tmpanswer" >> $TMP/tmpscript
@@ -70,9 +70,9 @@ PARTITION=`cat $TMP/tmpanswer`
 if [ ! -f /etc/expert-mode ]; then
 cfdisk $PARTITION
 else
-echo dialog --title \"PARTITIONING $PARTITION\" \
---menu \"Select which fdisk program you want to use. cfdisk is \
-strongly recommended for newbies while advanced users may prefer fdisk.\" \
+echo dialog --title \"РАЗБИВКА $PARTITION\" \
+--menu \"Выберите программу для разбивки разделов. Новичкам \
+настоятельно рекомендуется использовать cfdisk, тогда как продвинутые пользователи могут предпочесть fdisk.\" \
 11 50 2 \
 cfdisk \"Curses based partitioning program\" \
 fdisk \"Traditional fdisk\" \
@@ -186,18 +186,26 @@ rm -f $TMP/swapmsg $TMP/SeTswap
 fi
 fi
 
-# format root partition
-fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-10 > $TMP/pout 2>/dev/null
-
 dialog --clear --title "ОБНАРУЖЕН КОРНЕВОЙ РАЗДЕЛ" --exit-label OK --msgbox "Помощник установки GentooLive обнаружил \n\n `cat /tmp/tmp/pout` \n\n в качестве Linux-совместимого \
 раздела(ов).\n\n Далее можно выбрать файловую систему  для корневого раздела из нескольких, если таковые имеются!" 20 70
 if [ $? = 1 ] ; then
 exit
 fi
 
-# choose root partition
-dialog --clear --title "ВЫБЕРИТЕ КОРНЕВОЙ РАЗДЕЛ" --inputbox "Укажите предпочитаемый раздел:\n\n введите /dev/sdaX --- где X - номер раздела, \
-например 1 для /dev/sda1!" 10 70 2> $TMP/pout
+# format root partition
+fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-10 > $TMP/pout 2>/dev/null
+
+while [ 0 ]; do
+echo dialog --ok-label Выбрать \
+--cancel-label Продолжить \
+--title \"РАЗБИВКА КОРНЕВОГО РАЗДЕЛА\" \
+--menu \"Выберите раздел:\" 11 40 4 \\\
+> $TMP/tmpscript2
+cat $TMP/pout >> $TMP/tmpscript2
+echo "2> $TMP/tmpanswer" >> $TMP/tmpscript2
+. $TMP/tmpscript2
+[ $? != 0 ] && break
+PARTITION=`cat $TMP/tmpanswer2`
 
 dialog --clear --title "ОТФОРМАТИРУЙТЕ КОРНЕВОЙ РАЗДЕЛ" --radiolist "Теперь можно выбрать файловую систему для корневого раздела; имейте ввиду, \
 что раздел будет отформатирован после выбора файловой системы." 10 70 0 \
@@ -212,49 +220,338 @@ exit
 fi
 
 if [ `cat $TMP/part` = "1" ] ; then
-mkfs.ext2 `cat $TMP/pout`
-dialog --clear --title "ОТФОРМАТИРУЙТЕ КОРНЕВОЙ РАЗДЕЛ" --msgbox "Теперь раздел будет отформатирован в файловую систему ext2." 10 70
+dialog --title "ФОРМАТИРОВАНИЕ КОРНЕВОГО РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext2..."  4 55
+mkfs.ext2 -y `cat $TMP/pout`
 echo "`cat $TMP/pout` / ext2 defaults,noatime 1 1" >> $TMP/SeTfstab2
 # mount the root partition to copy the system
-mkdir /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
 mount -t ext2 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`
 fi
 
 if [ `cat $TMP/part` = "2" ] ; then
-mkfs.ext3 `cat $TMP/pout`
-dialog --clear --title "ОТФОРМАТИРУЙТЕ КОРНЕВОЙ РАЗДЕЛ" --msgbox "Теперь раздел будет отформатирован в файловую систему ext3." 10 70
+dialog --title "ФОРМАТИРОВАНИЕ КОРНЕВОГО РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext3..."  4 55
+mkfs.ext3 -y `cat $TMP/pout`
 echo "`cat $TMP/pout` / ext3 defaults,noatime 1 1" >> $TMP/SeTfstab2
 # mount the root partition to copy the system
-mkdir /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
 mount -t ext3 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`
 fi
 
 if [ `cat $TMP/part` = "3" ] ; then
-mkfs.ext4 `cat $TMP/pout`
-dialog --clear --title "ОТФОРМАТИРУЙТЕ КОРНЕВОЙ РАЗДЕЛ" --msgbox "Теперь раздел будет отформатирован в файловую систему ext4." 10 70
+dialog  --title "ФОРМАТИРОВАНИЕ КОРНЕВОГО РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext4..."  4 55
+mkfs.ext4 -y `cat $TMP/pout`
 echo "`cat $TMP/pout` / ext4 defaults,noatime 1 1" >> $TMP/SeTfstab2
 # mount the root partition to copy the system
-mkdir /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
 mount -t ext4 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`
 fi
 
 if [ `cat $TMP/part` = "4" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ КОРНЕВОГО РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему reiserfs..."  4 55
 mkfs.reiserfs -f `cat $TMP/pout`
-dialog --clear --title "ОТФОРМАТИРУЙТЕ КОРНЕВОЙ РАЗДЕЛ" --msgbox "Теперь раздел будет отформатирован в файловую систему reiserfs." 10 70
 echo "`cat $TMP/pout` / reiserfs defaults,noatime 1 1" >> $TMP/SeTfstab2
 # mount the root partition to copy the system
-mkdir /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
 mount -t reiserfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
 fi
 
 if [ `cat $TMP/part` = "5" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ КОРНЕВОГО РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему btrfs..."  4 55
 mkfs.btrfs -f `cat $TMP/pout`
-dialog --clear --title "ОТФОРМАТИРУЙТЕ КОРНЕВОЙ РАЗДЕЛ" --msgbox "Теперь раздел будет отформатирован в файловую систему btrfs." 10 70
 echo "`cat $TMP/pout` / btrfs defaults,noatime 1 1" >> $TMP/SeTfstab2
 # mount the root partition to copy the system
-mkdir /mnt/gentoo/gentoo/`cat $TMP/pout | cut -b 6-10`
+mkdir -p /mnt/gentoo/gentoo/`cat $TMP/pout | cut -b 6-10`
 mount -t btrfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`
 fi
+
+# format /boot partition
+fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-10 > $TMP/pout 2>/dev/null
+
+while [ 0 ]; do
+echo dialog --ok-label Выбрать \
+--cancel-label Продолжить \
+--title \"РАЗБИВКА КОРНЕВОГО РАЗДЕЛА\" \
+--menu \"Выберите раздел:\" 11 40 4 \\\
+> $TMP/tmpscript2
+cat $TMP/pout >> $TMP/tmpscript2
+echo "2> $TMP/tmpanswer" >> $TMP/tmpscript2
+. $TMP/tmpscript2
+[ $? != 0 ] && break
+PARTITION=`cat $TMP/tmpanswer2`
+
+dialog --clear --title "ОТФОРМАТИРУЙТЕ РАЗДЕЛ ДЛЯ /BOOT" --radiolist "Теперь можно выбрать файловую систему; имейте ввиду, \
+что раздел будет отформатирован после выбора файловой системы." 10 70 0 \
+"1" "ext2" off \
+"2" "ext3" off \
+"3" "ext4" on \
+"4" "reiserfs" off \
+"5" "btrfs" off \
+2> $TMP/part
+if [ $? = 1 ] ; then
+exit
+fi
+
+if [ `cat $TMP/part` = "1" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext2..."  4 55
+mkfs.ext2 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /boot ext2 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+mount -t ext2 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+fi
+
+if [ `cat $TMP/part` = "2" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext3..."  4 55
+mkfs.ext3 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /boot ext3 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+mount -t ext3 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+fi
+
+if [ `cat $TMP/part` = "3" ] ; then
+dialog  --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext4..."  4 55
+mkfs.ext4 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /boot ext4 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+mount -t ext4 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+fi
+
+if [ `cat $TMP/part` = "4" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему reiserfs..."  4 55
+mkfs.reiserfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /boot reiserfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+mount -t reiserfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+fi
+
+if [ `cat $TMP/part` = "5" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему btrfs..."  4 55
+mkfs.btrfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /boot btrfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+mount -t btrfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/boot
+fi
+
+# format /home partition
+fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-10 > $TMP/pout 2>/dev/null
+
+while [ 0 ]; do
+echo dialog --ok-label Выбрать \
+--cancel-label Продолжить \
+--title \"РАЗБИВКА РАЗДЕЛА\" \
+--menu \"Выберите раздел:\" 11 40 4 \\\
+> $TMP/tmpscript2
+cat $TMP/pout >> $TMP/tmpscript2
+echo "2> $TMP/tmpanswer" >> $TMP/tmpscript2
+. $TMP/tmpscript2
+[ $? != 0 ] && break
+PARTITION=`cat $TMP/tmpanswer2`
+
+dialog --clear --title "ОТФОРМАТИРУЙТЕ РАЗДЕЛ ДЛЯ /HOME" --radiolist "Теперь можно выбрать файловую систему; имейте ввиду, \
+что раздел будет отформатирован после выбора файловой системы." 10 70 0 \
+"1" "ext2" off \
+"2" "ext3" off \
+"3" "ext4" on \
+"4" "reiserfs" off \
+"5" "btrfs" off \
+2> $TMP/part
+if [ $? = 1 ] ; then
+exit
+fi
+
+if [ `cat $TMP/part` = "1" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext2..."  4 55
+mkfs.ext2 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /home ext2 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+mount -t ext2 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/home
+fi
+
+if [ `cat $TMP/part` = "2" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext3..."  4 55
+mkfs.ext3 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /home ext3 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+mount -t ext3 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/home
+fi
+
+if [ `cat $TMP/part` = "3" ] ; then
+dialog  --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext4..."  4 55
+mkfs.ext4 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /home ext4 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+mount -t ext4 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/home
+fi
+
+if [ `cat $TMP/part` = "4" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему reiserfs..."  4 55
+mkfs.reiserfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /home reiserfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+mount -t reiserfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+fi
+
+if [ `cat $TMP/part` = "5" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему btrfs..."  4 55
+mkfs.btrfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /home btrfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+mount -t btrfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/home
+fi
+
+# format /usr partition
+fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-10 > $TMP/pout 2>/dev/null
+
+while [ 0 ]; do
+echo dialog --ok-label Выбрать \
+--cancel-label Продолжить \
+--title \"РАЗБИВКА РАЗДЕЛА\" \
+--menu \"Выберите раздел:\" 11 40 4 \\\
+> $TMP/tmpscript2
+cat $TMP/pout >> $TMP/tmpscript2
+echo "2> $TMP/tmpanswer" >> $TMP/tmpscript2
+. $TMP/tmpscript2
+[ $? != 0 ] && break
+PARTITION=`cat $TMP/tmpanswer2`
+
+dialog --clear --title "ОТФОРМАТИРУЙТЕ РАЗДЕЛ ДЛЯ /USR" --radiolist "Теперь можно выбрать файловую систему; имейте ввиду, \
+что раздел будет отформатирован после выбора файловой системы." 10 70 0 \
+"1" "ext2" off \
+"2" "ext3" off \
+"3" "ext4" on \
+"4" "reiserfs" off \
+"5" "btrfs" off \
+2> $TMP/part
+if [ $? = 1 ] ; then
+exit
+fi
+
+if [ `cat $TMP/part` = "1" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext2..."  4 55
+mkfs.ext2 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /usr ext2 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+mount -t ext2 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+fi
+
+if [ `cat $TMP/part` = "2" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext3..."  4 55
+mkfs.ext3 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /usr ext3 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+mount -t ext3 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+fi
+
+if [ `cat $TMP/part` = "3" ] ; then
+dialog  --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext4..."  4 55
+mkfs.ext4 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /usr ext4 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+mount -t ext4 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+fi
+
+if [ `cat $TMP/part` = "4" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему reiserfs..."  4 55
+mkfs.reiserfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /usr reiserfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+mount -t reiserfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+fi
+
+if [ `cat $TMP/part` = "5" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему btrfs..."  4 55
+mkfs.btrfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /usr btrfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+mount -t btrfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/usr
+fi
+
+# format /boot partition
+fdisk -l | grep Linux | sed -e '/swap/d' | cut -b 1-10 > $TMP/pout 2>/dev/null
+
+while [ 0 ]; do
+echo dialog --ok-label Выбрать \
+--cancel-label Продолжить \
+--title \"РАЗБИВКА РАЗДЕЛА\" \
+--menu \"Выберите раздел:\" 11 40 4 \\\
+> $TMP/tmpscript2
+cat $TMP/pout >> $TMP/tmpscript2
+echo "2> $TMP/tmpanswer" >> $TMP/tmpscript2
+. $TMP/tmpscript2
+[ $? != 0 ] && break
+PARTITION=`cat $TMP/tmpanswer2`
+
+dialog --clear --title "ОТФОРМАТИРУЙТЕ РАЗДЕЛ ДЛЯ /VAR" --radiolist "Теперь можно выбрать файловую систему; имейте ввиду, \
+что раздел будет отформатирован после выбора файловой системы." 10 70 0 \
+"1" "ext2" off \
+"2" "ext3" off \
+"3" "ext4" on \
+"4" "reiserfs" off \
+"5" "btrfs" off \
+2> $TMP/part
+if [ $? = 1 ] ; then
+exit
+fi
+
+if [ `cat $TMP/part` = "1" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext2..."  4 55
+mkfs.ext2 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /var ext2 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+mount -t ext2 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/var
+fi
+
+if [ `cat $TMP/part` = "2" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext3..."  4 55
+mkfs.ext3 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /var ext3 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+mount -t ext3 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/var
+fi
+
+if [ `cat $TMP/part` = "3" ] ; then
+dialog  --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему ext4..."  4 55
+mkfs.ext4 -y `cat $TMP/pout`
+echo "`cat $TMP/pout` /var ext4 defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+mount -t ext4 /dev/`cat $TMP/pout | cut -b 6-10` /mnt//gentoo/`cat $TMP/pout | cut -b 6-10`/var
+fi
+
+if [ `cat $TMP/part` = "4" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему reiserfs..."  4 55
+mkfs.reiserfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /var reiserfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+mount -t reiserfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+fi
+
+if [ `cat $TMP/part` = "5" ] ; then
+dialog --title "ФОРМАТИРОВАНИЕ РАЗДЕЛА" --infobox "Форматирование раздела `cat $TMP/pout` в файловую систему btrfs..."  4 55
+mkfs.btrfs -f `cat $TMP/pout`
+echo "`cat $TMP/pout` /var btrfs defaults,noatime 1 1" >> $TMP/SeTfstab2
+# mount the root partition to copy the system
+mkdir -p /mnt/gentoo/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+mount -t btrfs /dev/`cat $TMP/pout | cut -b 6-10` /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/var
+fi
+
 # copy the system
 dialog --clear --title "КОПИРОВАНИЕ ФАЙЛОВ СИСТЕМЫ" --msgbox "Помощник установки GentooLive начнет копирование файлов системы на жесткий диск.\n\n Нажмите OK \
 чтобы начать ..." 10 70
@@ -265,7 +562,13 @@ fi
 dialog --title "ПРОЦЕСС КОПИРОВАНИЯ" --infobox "Помощник установки GentooLive копирует файлы системы на жесткий диск.\n\n Пожалуйста подождите ... это может занять \
 до 10 минут в зависимости от вашей системы!" 10 70
 
+MACHINE_TYPE=`uname -m`
+
+if [ ${MACHINE_TYPE} == 'i686' ]; then 
+cp -arpx /mnt/livecd/{boot,bin,dev,home,etc,lib,media,mnt,opt,proc,root,run,sbin,sys,var,usr,tmp} /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/ 2>/dev/null
+elif [ ${MACHINE_TYPE} == 'x86-64' ]; then
 cp -arpx /mnt/livecd/{boot,bin,dev,home,etc,lib,lib32,lib64,media,mnt,opt,proc,root,run,sbin,sys,var,usr,tmp} /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/ 2>/dev/null
+fi
 
 mkdir /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/mnt 2>/dev/null
 mkdir /mnt/gentoo/`cat $TMP/pout | cut -b 6-10`/media 2>/dev/null
