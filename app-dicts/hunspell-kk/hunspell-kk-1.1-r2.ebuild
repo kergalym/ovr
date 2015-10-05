@@ -7,7 +7,7 @@ inherit eutils git-r3
 
 MY_P=${PN}-${PV/_beta/b}
 
-DESCRIPTION=" Kazakh dictionaries for myspell/hunspell"
+DESCRIPTION="Kazakh dictionaries for myspell/hunspell"
 EGIT_REPO_URI="https://github.com/kergalym/hunspell-kk.git"
 HOMEPAGE="http://hunspell.sourceforge.net/"
 
