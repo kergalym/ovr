@@ -8,7 +8,7 @@ inherit eutils git-r3 vcs-snapshot
 MY_P=${PN}-${PV}
 
 DESCRIPTION="Kazakh dictionaries for myspell/hunspell"
-SRC_URI="https://github.com/kergalym/${PN}/archive/1.1-2.tar.gz -> ${P}.tar.gz"
+SRC_URI="https://github.com/kergalym/${PN}/archive/${PV}.tar.gz -> ${P}.tar.gz"
 HOMEPAGE="http://hunspell.sourceforge.net/"
 
 SLOT="0"
