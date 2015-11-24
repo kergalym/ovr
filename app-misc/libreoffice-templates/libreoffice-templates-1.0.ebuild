@@ -29,10 +29,10 @@ src_install() {
  
  dodir "/usr/share/templates/.source"
  insinto "/usr/share/templates/.source"
- doins "${S}/IllustrationDocument.odg" || die
- doins "${S}/Praesentation.odp" || die
- doins "${S}/TableDocument.ods" || die
- doins "${S}/TextDocument.odt" || die
+ doins "${S}/.source/IllustrationDocument.odg" || die
+ doins "${S}/.source/Praesentation.odp" || die
+ doins "${S}/.source/TableDocument.ods" || die
+ doins "${S}/.source/TextDocument.odt" || die
 
 
 }
