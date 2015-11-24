@@ -22,10 +22,10 @@ src_install() {
 
  dodir "/usr/share/templates/"
  insinto "/usr/share/templates/"
- doins "${S}/LibreOffice-Calc" || die
- doins "${S}/LibreOffice-Draw" || die
- doins "${S}/LibreOffice-Impress" || die
- doins "${S}/LibreOffice-Writer" || die
+ doins "${S}/LibreOffice-Calc.desktop" || die
+ doins "${S}/LibreOffice-Draw.desktop" || die
+ doins "${S}/LibreOffice-Impress.desktop" || die
+ doins "${S}/LibreOffice-Writer.desktop" || die
  
  dodir "/usr/share/templates/.source"
  insinto "/usr/share/templates/.source"
