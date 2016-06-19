@@ -82,6 +82,7 @@ start() {
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/*x86* $BUILDROOT/etc/kernels/
    cp $BUILDDATA/scripts/inchroot* $BUILDROOT/
+   cp -r $BUILDDATA/scripts/stage3/etc/portage $BUILDROOT/etc/
    rm -rf $BUILDROOT/root/.config $BUILDROOT/etc/skel/.config $BUILDROOT/home/user/.config
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/root 
    tar xpf $BUILDDATA/scripts/xfce.config.tar -C $BUILDROOT/home/user
@@ -95,13 +96,13 @@ start() {
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
    if [ ${MACHINE_TYPE} == 'x86_64' ]; then
           rm $BUILDROOT/etc/portage/make.conf
-          linux32 chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32.conf /etc/portage/make.conf'
+          linux32 chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32kde.conf /etc/portage/make.conf'
           linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done  && /inchroot2.sh && rm /inchroot*"
           linux32 chroot ${BUILDROOT} /bin/bash
 	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/
    elif [ ${MACHINE_TYPE} == 'i686' ]; then
           rm $BUILDROOT/etc/portage/make.conf
-          chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32.conf /etc/portage/make.conf'
+          chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32kde.conf /etc/portage/make.conf'
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done && /inchroot2.sh && rm /inchroot*"
 	  chroot ${BUILDROOT} /bin/bash
 	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/
