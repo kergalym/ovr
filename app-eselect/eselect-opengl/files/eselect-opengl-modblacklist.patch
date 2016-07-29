@@ -1,0 +1,37 @@
+--- opengl.eselect-1.3.1	2016-07-29 23:07:22.360135598 +0600
++++ opengl.eselect-1.3.2	2016-07-29 22:53:16.019143637 +0600
+@@ -22,6 +22,7 @@
+ # Our data
+ ENV_FILE="${EROOT}/etc/env.d/000opengl"
+ XORGD_FILE="${EROOT}/etc/X11/xorg.conf.d/20opengl.conf"
++PROPMOD="${EROOT}/etc/modprobe.d/vga.blacklist.conf"
+ PREFIX="${EROOT}/usr"
+ DST_PREFIX="${EROOT}/usr"
+ unset IGNORE_MISSING
+@@ -94,6 +95,14 @@
+ 			[[ -d ${PREFIX}/${libdir}/opengl && ! -h ${PREFIX}/${libdir} ]] || continue
+ 			[[ -f "${PREFIX}/${libdir}/opengl/${gl_implem}/lib/libGL.so" || -f "${PREFIX}/${libdir}/opengl/${gl_implem}/.gles-only" ]] && found_libgl=yes
+ 		done
++	
++	# We should blacklist FOSS driver modules for proprietary gl_implem
++	if [[ ${gl_implem} == nvidia ]]; then 
++		echo "blacklist nouveau" > ${PROPMOD}
++	elif [[ ${gl_implem} == ati ]]
++	then	
++		echo "blacklist radeon" > ${PROPMOD} #need test on hardware with ati graphics
++	fi
+ 
+ 		if [[ -z ${found_libgl} ]]; then
+ 			write_error_msg "The ${gl_implem} OpenGL implementation doesn't seem to provide"
+@@ -112,6 +121,11 @@
+ 		rm -f "${XORGD_FILE}" || die -q "Failed to remove ${ENV_FILE}"
+ 	fi
+ 
++	# We should blacklist proprietary driver modules for xorg-x11
++	if [[ ${gl_implem} == xorg-x11 ]]; then 
++		echo -e "blacklist nvidia\nblacklist fglrx" > ${PROPMOD}
++	fi
++
+ 	for libdir in $(list_libdirs); do
+ 		# Set libdir correctly to EROOT
+ 		[[ ${ROOT} != / ]] && libdir=${libdir#${EROOT}}
