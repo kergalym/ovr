@@ -1,0 +1,12 @@
+--- a/startkde/startkde.cmake	2016-07-30 15:58:19.273378368 +0600
++++ a/startkde/startkde.cmake	2016-07-30 15:57:26.368378871 +0600
+@@ -10,6 +10,9 @@
+     export KWIN_COMPOSE KDE_FAILSAFE QT_XCB_FORCE_SOFTWARE_OPENGL
+ fi
+ 
++QT_LOGGING_RULES="*.debug=false"
++export QT_LOGGING_RULES
++
+ # When the X server dies we get a HUP signal from xinit. We must ignore it
+ # because we still need to do some cleanup.
+ trap 'echo GOT SIGHUP' HUP
