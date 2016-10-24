@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [ "${EBUILD_PHASE}" == "postinst" ];
+then
+  zcat /proc/config.gz > /usr/src/linux/.config
+  cp /usr/src/linux/.config /usr/share/genkernel/arch/x86/kernel-config
+  cp /usr/src/linux/.config /usr/share/genkernel/arch/x86_64/kernel-config
+fi
+
+

@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ "${EBUILD_PHASE}" == "postinst" ];
+then
+  echo ":: Configuring Samba UserShare ";
+  chgrp users /var/lib/samba/usershares;
+  chmod 1770 /var/lib/samba/usershares;
+fi
+

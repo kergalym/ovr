@@ -1,4 +1,5 @@
-app-admin/eselect-timezone
+# move app-admin/eselect-timezone app-eselect/eselect-timezone
+app-eselect/eselect-timezone
 app-admin/hddtemp
 app-admin/logrotate
 app-admin/sudo
@@ -88,121 +89,204 @@ games-strategy/0ad
 games-strategy/openra
 games-util/steam-launcher
 gnome-extra/nm-applet
-kde-base/akonadiconsole
-kde-base/akregator
-kde-base/ark
-kde-base/audiocd-kio
-kde-base/calendarjanitor
-kde-base/dolphin
-kde-base/ffmpegthumbs
-kde-base/filelight
+# move kde-base/akonadiconsole kde-apps/akonadiconsole
+kde-apps/akonadiconsole
+# move kde-base/akregator kde-apps/akregator
+kde-apps/akregator
+# move kde-base/ark kde-apps/ark
+kde-apps/ark
+# move kde-base/audiocd-kio kde-apps/audiocd-kio
+kde-apps/audiocd-kio
+# move kde-base/calendarjanitor kde-apps/calendarjanitor
+kde-apps/calendarjanitor
+# move kde-base/dolphin kde-apps/dolphin
+kde-apps/dolphin
+# move kde-base/ffmpegthumbs kde-apps/ffmpegthumbs
+kde-apps/ffmpegthumbs
+# move kde-base/filelight kde-apps/filelight
+kde-apps/filelight
 kde-base/freespacenotifier
-kde-base/gwenview
-kde-base/kabcclient
-kde-base/kaddressbook
-kde-base/kalarm
-kde-base/kamera
-kde-base/kate
-kde-base/kcalc
-kde-base/kcharselect
+# move kde-base/gwenview kde-apps/gwenview
+kde-apps/gwenview
+# move kde-base/kabcclient kde-apps/kabcclient
+kde-apps/kabcclient
+# move kde-base/kaddressbook kde-apps/kaddressbook
+kde-apps/kaddressbook
+# move kde-base/kalarm kde-apps/kalarm
+kde-apps/kalarm
+# move kde-base/kamera kde-apps/kamera
+kde-apps/kamera
+# move kde-base/kate kde-apps/kate
+kde-apps/kate
+# move kde-base/kcalc kde-apps/kcalc
+kde-apps/kcalc
+# move kde-base/kcharselect kde-apps/kcharselect
+kde-apps/kcharselect
 kde-base/kcheckpass
 kde-base/kcminit
-kde-base/kcolorchooser
-kde-base/kcron
-kde-base/kde-l10n
-kde-base/kde-wallpapers
-kde-base/kdeartwork-colorschemes
-kde-base/kdeartwork-desktopthemes
-kde-base/kdeartwork-emoticons
-kde-base/kdeartwork-iconthemes
-kde-base/kdeartwork-kscreensaver
-kde-base/kdeartwork-styles
+# move kde-base/kcolorchooser kde-apps/kcolorchooser
+kde-apps/kcolorchooser
+# move kde-base/kcron kde-apps/kcron
+kde-apps/kcron
+# move kde-base/kde-l10n kde-apps/kde4-l10n
+kde-apps/kde4-l10n
+# move kde-base/kde-wallpapers kde-apps/kde-wallpapers
+kde-apps/kde-wallpapers
+# move kde-base/kdeartwork-colorschemes kde-apps/kdeartwork-colorschemes
+kde-apps/kdeartwork-colorschemes
+# move kde-base/kdeartwork-desktopthemes kde-apps/kdeartwork-desktopthemes
+kde-apps/kdeartwork-desktopthemes
+# move kde-base/kdeartwork-emoticons kde-apps/kdeartwork-emoticons
+kde-apps/kdeartwork-emoticons
+# move kde-base/kdeartwork-iconthemes kde-apps/kdeartwork-iconthemes
+kde-apps/kdeartwork-iconthemes
+# move kde-base/kdeartwork-kscreensaver kde-apps/kdeartwork-kscreensaver
+kde-apps/kdeartwork-kscreensaver
+# move kde-base/kdeartwork-styles kde-apps/kdeartwork-styles
+kde-apps/kdeartwork-styles
 kde-base/kdebase-cursors
-kde-base/kdebase-runtime-meta
+# move kde-base/kdebase-runtime-meta kde-apps/kdebase-runtime-meta
+kde-apps/kdebase-runtime-meta
 kde-base/kdebase-startkde
-kde-base/kdegraphics-mobipocket
+# move kde-base/kdegraphics-mobipocket kde-apps/kdegraphics-mobipocket
+kde-apps/kdegraphics-mobipocket
 kde-base/kdelibs
-kde-base/kdenetwork-filesharing
-kde-base/kdepasswd
-kde-base/kdepim-icons
-kde-base/kdepim-kresources
-kde-base/kdepim-l10n
-kde-base/kdepim-runtime
+# move kde-base/kdenetwork-filesharing kde-apps/kdenetwork-filesharing
+kde-apps/kdenetwork-filesharing
+# move kde-base/kdepasswd kde-apps/kdepasswd
+kde-apps/kdepasswd
+# move kde-base/kdepim-icons kde-apps/kdepim-icons
+kde-apps/kdepim-icons
+# move kde-base/kdepim-kresources kde-apps/kdepim-kresources
+kde-apps/kdepim-kresources
+# move kde-base/kdepim-l10n kde-apps/kdepim-l10n
+kde-apps/kdepim-l10n
+# move kde-base/kdepim-runtime kde-apps/kdepim-runtime
+kde-apps/kdepim-runtime
 kde-base/kdeplasma-addons
-kde-base/kdf
-kde-base/kdialog
+# move kde-base/kdf kde-apps/kdf
+kde-apps/kdf
+# move kde-base/kdialog kde-apps/kdialog
+kde-apps/kdialog
 kde-base/kdm
-kde-base/keditbookmarks
+# move kde-base/keditbookmarks kde-apps/keditbookmarks
+kde-apps/keditbookmarks
 kde-base/kephal
-kde-base/kfind
-kde-base/kfmclient
-kde-base/kgamma
-kde-base/kgpg
+# move kde-base/kfind kde-apps/kfind
+kde-apps/kfind
+# move kde-base/kfmclient kde-apps/kfmclient
+kde-apps/kfmclient
+# move kde-base/kgamma kde-apps/kgamma
+# move kde-apps/kgamma kde-plasma/kgamma
+kde-plasma/kgamma
+# move kde-base/kgpg kde-apps/kgpg
+kde-apps/kgpg
 kde-base/khotkeys
 kde-base/kinfocenter
-kde-base/kjots
-kde-base/kleopatra
+# move kde-base/kjots kde-apps/kjots
+kde-apps/kjots
+# move kde-base/kleopatra kde-apps/kleopatra
+kde-apps/kleopatra
 kde-base/klipper
-kde-base/kmail
+# move kde-base/kmail kde-apps/kmail
+kde-apps/kmail
 kde-base/kmenuedit
-kde-base/kmix
-kde-base/knotes
-kde-base/kolourpaint
-kde-base/konqueror
-kde-base/konsole
-kde-base/konsolekalendar
-kde-base/kontact
-kde-base/kopete
-kde-base/korganizer
-kde-base/kppp
-kde-base/krdc
-kde-base/kremotecontrol
-kde-base/kruler
-kde-base/ksaneplugin
-kde-base/kscd
+# move kde-base/kmix kde-apps/kmix
+kde-apps/kmix
+# move kde-base/knotes kde-apps/knotes
+kde-apps/knotes
+# move kde-base/kolourpaint kde-apps/kolourpaint
+kde-apps/kolourpaint
+# move kde-base/konqueror kde-apps/konqueror
+kde-apps/konqueror
+# move kde-base/konsole kde-apps/konsole
+kde-apps/konsole
+# move kde-base/konsolekalendar kde-apps/konsolekalendar
+kde-apps/konsolekalendar
+# move kde-base/kontact kde-apps/kontact
+kde-apps/kontact
+# move kde-base/kopete kde-apps/kopete
+kde-apps/kopete
+# move kde-base/korganizer kde-apps/korganizer
+kde-apps/korganizer
+# move kde-base/kppp kde-apps/kppp
+kde-apps/kppp
+# move kde-base/krdc kde-apps/krdc
+kde-apps/krdc
+# move kde-base/kremotecontrol kde-apps/kremotecontrol
+kde-apps/kremotecontrol
+# move kde-base/kruler kde-apps/kruler
+kde-apps/kruler
+# move kde-base/ksaneplugin kde-apps/ksaneplugin
+kde-apps/ksaneplugin
+# move kde-base/kscd kde-apps/kscd
+kde-apps/kscd
 kde-base/kscreensaver
 kde-base/ksmserver
-kde-base/ksnapshot
+# move kde-base/ksnapshot kde-apps/ksnapshot
+kde-apps/ksnapshot
 kde-base/ksplash
 kde-base/kstartupconfig
 kde-base/kstyles
 kde-base/ksysguard
-kde-base/ksystemlog
+# move kde-base/ksystemlog kde-apps/ksystemlog
+kde-apps/ksystemlog
 kde-base/ksystraycmd
-kde-base/kuser
+# move kde-base/kuser kde-apps/kuser
+kde-apps/kuser
 kde-base/kwin
-kde-base/kwrite
+# move kde-base/kwrite kde-apps/kwrite
+kde-apps/kwrite
 kde-base/kwrited
-kde-base/libkcddb
-kde-base/libkcompactdisc
-kde-base/libkdcraw
-kde-base/libkdcraw:4
-kde-base/libkexiv2
-kde-base/libkexiv2:4
-kde-base/libkipi
-kde-base/libkonq
-kde-base/libksane
+# move kde-base/libkcddb kde-apps/libkcddb
+kde-apps/libkcddb
+# move kde-base/libkcompactdisc kde-apps/libkcompactdisc
+kde-apps/libkcompactdisc
+# move kde-base/libkdcraw kde-apps/libkdcraw
+kde-apps/libkdcraw
+# move kde-base/libkdcraw kde-apps/libkdcraw
+kde-apps/libkdcraw:4
+# move kde-base/libkexiv2 kde-apps/libkexiv2
+kde-apps/libkexiv2
+# move kde-base/libkexiv2 kde-apps/libkexiv2
+kde-apps/libkexiv2:4
+# move kde-base/libkipi kde-apps/libkipi
+kde-apps/libkipi
+# move kde-base/libkonq kde-apps/libkonq
+kde-apps/libkonq
+# move kde-base/libksane kde-apps/libksane
+kde-apps/libksane
 kde-base/libkworkspace
 kde-base/liboxygenstyle
 kde-base/libplasmaclock
 kde-base/libplasmagenericshell
 kde-base/libtaskmanager
-kde-base/lokalize
-kde-base/mplayerthumbs
+# move kde-base/lokalize kde-apps/lokalize
+kde-apps/lokalize
+# move kde-base/mplayerthumbs kde-apps/mplayerthumbs
+kde-apps/mplayerthumbs
 kde-base/nepomuk-core
 kde-base/nepomuk-widgets
-kde-base/nsplugins
-kde-base/okular
-kde-base/phonon-kde
-kde-base/plasma-apps
+# move kde-base/nsplugins kde-apps/nsplugins
+kde-apps/nsplugins
+# move kde-base/okular kde-apps/okular
+kde-apps/okular
+# move kde-base/phonon-kde kde-apps/phonon-kde
+kde-apps/phonon-kde
+# move kde-base/plasma-apps kde-apps/plasma-apps
+kde-apps/plasma-apps
 kde-base/plasma-workspace
 kde-base/powerdevil
-kde-base/print-manager
+# move kde-base/print-manager kde-apps/print-manager
+kde-apps/print-manager
 kde-base/qguiplatformplugin_kde
-kde-base/svgpart
-kde-base/sweeper
+# move kde-base/svgpart kde-apps/svgpart
+kde-apps/svgpart
+# move kde-base/sweeper kde-apps/sweeper
+kde-apps/sweeper
 kde-base/systemsettings
-kde-base/thumbnailers
+# move kde-base/thumbnailers kde-apps/thumbnailers
+kde-apps/thumbnailers
 kde-misc/networkmanagement
 kde-misc/yakuake
 media-fonts/corefonts
@@ -262,7 +346,8 @@ media-video/dvdauthor
 media-video/dvgrab
 media-video/gtk-recordmydesktop
 media-video/guvcview
-media-video/kdenlive
+# move media-video/kdenlive kde-apps/kdenlive
+kde-apps/kdenlive
 media-video/kffmpegthumbnailer
 media-video/mplayer2
 media-video/mpv

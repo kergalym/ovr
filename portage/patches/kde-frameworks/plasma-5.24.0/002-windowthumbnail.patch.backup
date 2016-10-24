@@ -1,0 +1,21 @@
+--- plasma-framework-5.24.0/src/declarativeimports/core/windowthumbnail.cpp	2016-09-13 21:02:09.536369625 +0600
++++ plasma-framework-5.24.0/src/declarativeimports/core/windowthumbnail.cpp	2016-09-13 21:29:12.260354213 +0600
+@@ -276,7 +276,8 @@
+                 return false;
+             }
+ 
+-            textureNode->reset(window()->createTextureFromId(m_texture, QSize(geo->width, geo->height), QQuickWindow::TextureOwnsGLTexture));
++            textureNode->reset(window()->createTextureFromId(m_texture, QSize(geo->width, geo->height)));
++            
+         }
+         textureNode->texture()->bind();
+         bindGLXTexture();
+@@ -325,7 +326,7 @@
+                 size.setWidth(geo->width);
+                 size.setHeight(geo->height);
+             }
+-            textureNode->reset(window()->createTextureFromId(m_texture, size, QQuickWindow::TextureOwnsGLTexture));
++            textureNode->reset(window()->createTextureFromId(m_texture, size));
+         }
+         textureNode->texture()->bind();
+         bindEGLTexture();
