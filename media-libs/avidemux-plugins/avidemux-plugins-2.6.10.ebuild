@@ -70,12 +70,17 @@ RDEPEND="$DEPEND"
 
 S="${WORKDIR}/${MY_P}"
 
-processes="buildPluginsCommon:avidemux_plugins
-	buildPluginsCLI:avidemux_plugins"
-use qt4 && processes+=" buildPluginsQt4:avidemux_plugins"
-
 PATCHES=( "${FILESDIR}"/${PN}-2.6.4-optional-pulse.patch )
 
+src_prepare() {
+    processes="buildPluginsCommon:avidemux_plugins
+	buildPluginsCLI:avidemux_plugins"
+	
+    if use qt4 ; then 
+        processes+=" buildPluginsQt4:avidemux_plugins"
+    fi
+}
+    
 src_configure() {
 	# Add lax vector typing for PowerPC.
 	if use ppc || use ppc64 ; then

@@ -2,6 +2,11 @@
 # Copyright 1999-2015 Gentoo Foundation; Distributed under the GPL v2
 # $Header: /var/cvsroot/gentoo-x86/media-libs/avidemux-core/ChangeLog,v 1.26 2015/01/29 17:24:24 mgorny Exp $
 
+*avidemux-core-2.6.10 (26 Oct 2016)
+
+  26 Oct 2016; Galym Kerimbekov <kegalym2@mail.ru> +avidemux-core-2.6.10.ebuild:
+  Version bump to 2.6.10.
+  
   29 Jan 2015; Michał Górny <mgorny@gentoo.org> avidemux-core-2.6.2-r1.ebuild:
   Switch to CPU_FLAGS_X86.
 

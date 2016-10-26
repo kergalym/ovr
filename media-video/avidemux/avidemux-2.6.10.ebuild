@@ -42,9 +42,6 @@ PDEPEND="~media-libs/avidemux-plugins-${PV}:${SLOT}[opengl?,qt4?]"
 
 S="${WORKDIR}/${MY_P}"
 
-processes="buildCli:avidemux/cli"
-use qt4 && processes+=" buildQt4:avidemux/qt4"
-
 src_prepare() {
 	cmake-utils_src_prepare
 
@@ -64,6 +61,11 @@ src_prepare() {
 
 	# Remove "Build Option" dialog because it doesn't reflect what the GUI can or has been built with. (Bug #463628)
 	sed -i -e '/Build Option/d' avidemux/common/ADM_commonUI/myOwnMenu.h || die "Couldn't remove \"Build Option\" dialog."
+	
+	processes="buildCli:avidemux/cli"
+    if use qt4 ; then 
+        processes+=" buildQt4:avidemux/qt4"
+    fi
 }
 
 src_configure() {
