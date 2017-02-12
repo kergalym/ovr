@@ -87,6 +87,8 @@ start() {
    echo "Mounting chroot"
    mount $LOOP_IMAGE $BUILDROOT
    cp $BUILDDATA/scripts/initrd.defaults $BUILDDATA/scripts/initrd.scripts $BUILDDATA/scripts/linuxrc $BUILDROOT/usr/share/genkernel/defaults/
+   cp $BUILDDATA/scripts/world $BUILDROOT/var/lib/portage/world
+   cp $BUILDDATA/scripts/ee.sh $BUILDROOT/usr/local/bin/ee
    cp -L /etc/resolv.conf $BUILDROOT/etc/
    cp $BUILDDATA/scripts/*x86* $BUILDROOT/etc/kernels/
    cp $BUILDDATA/scripts/*x86_64* $BUILDROOT/etc/kernels/
@@ -104,14 +106,12 @@ start() {
    mount --make-rprivate --rbind /sys $BUILDROOT/sys >/dev/null &
    mount --make-rprivate --rbind /dev $BUILDROOT/dev >/dev/null &
    if [ ${MACHINE_TYPE} == 'i686' ]; then
-          rm $BUILDROOT/etc/portage/make.conf
-          linux32 chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make32xfce.conf /etc/portage/make.conf'
+      nano $BUILDROOT/etc/portage/make.conf
 	  linux32 chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done  && /inchroot2.sh && rm /inchroot*"
 	  linux32 chroot ${BUILDROOT} /bin/bash
 	  cp $BUILDROOT/etc/kernels/*x86* $BUILDDATA/scripts/
    elif  [ ${MACHINE_TYPE} == 'x86_64' ]; then
-          rm $BUILDROOT/etc/portage/make.conf
-          chroot ${BUILDROOT} /bin/bash -c 'ln -s /etc/portage/make64xfce.conf /etc/portage/make.conf'
+      nano $BUILDROOT/etc/portage/make.conf
 	  chroot ${BUILDROOT} /bin/bash -c "/inchroot.sh && touch /.stage1done  && /inchroot2.sh && rm /inchroot*"
 	  chroot ${BUILDROOT} /bin/bash
 	  cp $BUILDROOT/etc/kernels/*x86_64* $BUILDDATA/scripts/

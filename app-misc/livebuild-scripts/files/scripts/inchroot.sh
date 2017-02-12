@@ -12,10 +12,10 @@ if grep -q $TIMECOUNTRY /etc/timezone; then
 else 
     echo $TIMECOUNTRY > /etc/timezone >/dev/null & 
 fi
-if grep -q genxfce /etc/conf.d/hostname; then
+if grep -q gentoo /etc/conf.d/hostname; then
     echo "Hostname is configured already";  
 else
-    sed -i 's/localhost/genxfce/g' /etc/conf.d/hostname >/dev/null &
+    sed -i 's/localhost/gentoo/g' /etc/conf.d/hostname >/dev/null &
 fi
 if grep -q 'dns_domain_lo="workgroup"' /etc/conf.d/net; then
     echo "dns_doman_lo is configured already"; 
