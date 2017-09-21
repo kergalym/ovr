@@ -327,9 +327,12 @@ src_prepare() {
 	epatch "${FILESDIR}/15.11-remove-gpl-symbols.patch"
 	epatch "${FILESDIR}/15.9-kcl_str.patch"
 	epatch "${FILESDIR}/15.9-sep_printf.patch"
-	epatch "${FILESDIR}/15.9-mtrr.patch"
+	#epatch "${FILESDIR}/15.9-mtrr.patch"
 
-	epatch "${FILESDIR}/15.12-xstate-fp.patch"
+	#epatch "${FILESDIR}/15.12-xstate-fp.patch"
+
+	# Compatibility fix for linux-4.11
+	#epatch "${FILESDIR}/15.12-kernel-4.11.patch"
 	epatch_user
 
 	cd "${MODULE_DIR}"

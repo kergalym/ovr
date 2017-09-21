@@ -1,0 +1,18 @@
+--- a/Makefile	2017-09-22 04:16:47.740525070 +0600
++++ a/Makefile	2017-09-22 04:16:40.052097646 +0600
+@@ -26,8 +26,14 @@
+ subdir-ccflags-y += -DOS_NAME_SLE
+ else ifeq ("amzn",$(OS_NAME))
+ subdir-ccflags-y += -DOS_NAME_AMZ
++else ifeq ("gentoo",$(OS_NAME))
++subdir-ccflags-y += -DOS_NAME_GENTOO
++# We don't have a version inside /etc/os-release.
++OS_VERSION = "0.0"
++
+ else
+ subdir-ccflags-y += -DOS_NAME_UNKNOWN
++OS_VERSION = "0.0"
+ endif
+ 
+ subdir-ccflags-y += \
+
