@@ -89,6 +89,8 @@ src_install() {
 	unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/amdgpu-pro-core_${BUILD_VER}_all.deb"
 	#unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/amdgpu-pro-graphics_${BUILD_VER}_amd64.deb"
 
+	rm -rf ${S}/lib
+
     if use rocm ; then 
 	    if use amd64 ; then
 	    	unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/rocm-amdgpu-pro-opencl-dev_${BUILD_VER}_amd64.deb"
@@ -121,6 +123,16 @@ src_install() {
         rm -rf ${S}/usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so
 	fi
 
+	if use radeon ; then
+	     if use amd64 ; then
+		     dosym /usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so.1.0.1 /usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so
+		 fi	 
+
+		 if use x86 ; then
+		     dosym /usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so.1.0.1 /usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so
+		 fi	 
+    fi
+
 	if use opencl ; then # Check opencl
 		if use amd64 ; then
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/clinfo-amdgpu-pro_${BUILD_VER}_amd64.deb"
@@ -129,45 +141,45 @@ src_install() {
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libopencl1-amdgpu-pro_${BUILD_VER}_amd64.deb"
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/opencl-amdgpu-pro-icd_${BUILD_VER}_amd64.deb"
 
-			dodir "/usr/lib64/OpenCL/vendors/amdgpu-pro"
-			cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/OpenCL/vendors/amdgpu-pro
+			#dodir "/usr/lib64/OpenCL/vendors/amdgpu-pro"
+			#cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/OpenCL/vendors/amdgpu-pro
 
-			echo "/usr/lib64/OpenCL/vendors/amdgpu-pro/libamdocl64.so" > ${S}/etc/OpenCL/vendors/amdocl64.icd
+			#echo "/usr/lib64/OpenCL/vendors/amdgpu-pro/libamdocl64.so" > ${S}/etc/OpenCL/vendors/amdocl64.icd
 		fi
 		
 		if use x86 ; then
     		unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libopencl1-amdgpu-pro_${BUILD_VER}_i386.deb"
 	    	unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/opencl--amdgpu-pro-icd_${BUILD_VER}_i386.deb"
 
-		    dodir "/usr/lib32/OpenCL/vendors/amdgpu-pro"
-    		cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${D}/usr/lib32/OpenCL/vendors/amdgpu-pro
+		    #dodir "/usr/lib32/OpenCL/vendors/amdgpu-pro"
+    		#cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${D}/usr/lib32/OpenCL/vendors/amdgpu-pro
 
-	    	echo "/usr/lib32/OpenCL/vendors/amdgpu-pro/libamdocl32.so" > ${S}/etc/OpenCL/vendors/amdocl32.icd
+	    	#echo "/usr/lib32/OpenCL/vendors/amdgpu-pro/libamdocl32.so" > ${S}/etc/OpenCL/vendors/amdocl32.icd
         fi 
 
-		chmod -x ${S}/etc/OpenCL/vendors/*
-		rm -rf ${S}/usr/lib
+		#chmod -x ${S}/etc/OpenCL/vendors/*
+		#rm -rf ${S}/usr/lib
 	fi
 
 	if use vulkan ; then
 		if use amd64 ; then
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/vulkan-driver-amdgpu-pro_${BUILD_VER}_amd64.deb"
 
-			dodir "/usr/lib64/vulkan/amdgpu-pro"
-			cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/vulkan/amdgpu-pro
-			sed -i 's|/opt/amdgpu-pro/lib/x86_64-linux-gnu|/usr/lib64/vulkan/amdgpu-pro|g' ${S}/etc/vulkan/icd.d/amd_icd64.json
+			#dodir "/usr/lib64/vulkan/amdgpu-pro"
+			#cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/vulkan/amdgpu-pro
+			#sed -i 's|/opt/amdgpu-pro/lib/x86_64-linux-gnu|/usr/lib64/vulkan/amdgpu-pro|g' ${S}/etc/vulkan/icd.d/amd_icd64.json
 		fi
 	
     	if use x86 ; then
      	    unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/vulkan-driver-amdgpu-pro_${BUILD_VER}_i386.deb"
 
-	    	dodir "/usr/lib32/vulkan/amdgpu-pro"
-		    cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${S}/usr/lib32/vulkan/amdgpu-pro
-     		sed -i 's|/opt/amdgpu-pro/lib/i386-linux-gnu|/usr/lib32/vulkan/amdgpu-pro|g' ${S}/etc/vulkan/icd.d/amd_icd32.json
+	    	#dodir "/usr/lib32/vulkan/amdgpu-pro"
+		    #cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${S}/usr/lib32/vulkan/amdgpu-pro
+     		#sed -i 's|/opt/amdgpu-pro/lib/i386-linux-gnu|/usr/lib32/vulkan/amdgpu-pro|g' ${S}/etc/vulkan/icd.d/amd_icd32.json
         fi
 
-		chmod -x ${S}/etc/vulkan/icd.d/*
-		rm -rf ${S}/usr/lib
+		#chmod -x ${S}/etc/vulkan/icd.d/*
+		#rm -rf ${S}/usr/lib
 	fi
 
 	if use opengl ; then
@@ -175,58 +187,58 @@ src_install() {
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgl1-amdgpu-pro-dri_${BUILD_VER}_amd64.deb"
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgl1-amdgpu-pro-glx_${BUILD_VER}_amd64.deb"
 
-			dodir "/usr/lib64/opengl/amdgpu-pro/lib"
-			cp -dR ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
-			dodir "/usr/lib64/dri"
-			cp -dR ${S}/usr/lib/x86_64-linux-gnu/dri/* ${D}/usr/lib64/dri
+			#dodir "/usr/lib64/opengl/amdgpu-pro/lib"
+			#cp -dR ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
+			#dodir "/usr/lib64/dri"
+			#cp -dR ${S}/usr/lib/x86_64-linux-gnu/dri/* ${D}/usr/lib64/dri
 		fi
 
         if use x86 ; then
 		    unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgl1-amdgpu-pro-dri_${BUILD_VER}_i386.deb"
 		    unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgl1-amdgpu-pro-glx_${BUILD_VER}_i386.deb"
 
-		    dodir "/usr/lib32/opengl/amdgpu-pro/lib"
-		    cp -dR ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
-		    dodir "/usr/lib32/dri"
-		    cp -dR ${S}/usr/lib/i386-linux-gnu/dri/* ${D}/usr/lib32/dri
+		    #dodir "/usr/lib32/opengl/amdgpu-pro/lib"
+		    #cp -dR ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
+		    #dodir "/usr/lib32/dri"
+		    #cp -dR ${S}/usr/lib/i386-linux-gnu/dri/* ${D}/usr/lib32/dri
         fi
 
-		rm -rf ${S}/usr/lib
+		#rm -rf ${S}/usr/lib
 	fi
 
 	if use gles2 ; then
 		if use amd64 ; then
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgles2-amdgpu-pro_${BUILD_VER}_amd64.deb"
 
-			dodir "/usr/lib64/opengl/amdgpu-pro/lib"
-			cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
+			#dodir "/usr/lib64/opengl/amdgpu-pro/lib"
+			#cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
 		fi
 
 		if use x86 ; then
      		unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgles2-amdgpu-pro_${BUILD_VER}_i386.deb"
 
-	    	dodir "/usr/lib32/opengl/amdgpu-pro/lib"
-		    cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
+	    	#dodir "/usr/lib32/opengl/amdgpu-pro/lib"
+		    #cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
         fi
 
-		rm -rf ${S}/usr/lib
+		#rm -rf ${S}/usr/lib
 	fi
 
 	if use vdpau ; then
 		if use amd64 ; then
 			unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libvdpau-amdgpu-pro_${VDPAU_VER}_amd64.deb"
 
-			dodir "/usr/lib64/vdpau"
-			cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/vdpau/* ${D}/usr/lib64/vdpau
+			#dodir "/usr/lib64/vdpau"
+			#cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/vdpau/* ${D}/usr/lib64/vdpau
 		fi
 
 		if use x86 ; then
     		unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libvdpau-amdgpu-pro_${VDPAU_VER}_i386.deb"
 
-			dodir "/usr/lib32/vdpau"
-			cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/vdpau/* ${D}/usr/lib32/vdpau
+			#dodir "/usr/lib32/vdpau"
+			#cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/vdpau/* ${D}/usr/lib32/vdpau
 		fi
-	    	rm -rf ${S}/usr/lib
+	    	#rm -rf ${S}/usr/lib
 	fi
 
 	if use amd64 ; then 
@@ -238,17 +250,17 @@ src_install() {
 		unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgbm1-amdgpu-pro_${BUILD_VER}_amd64.deb"
 		unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/xserver-xorg-video-amdgpu-pro_${X11_VIDEO_VER}_amd64.deb"
 
-		cp -dR ${S}/opt/amdgpu-pro/lib/xorg/* ${D}/usr/lib64/xorg/
+		#cp -dR ${S}/opt/amdgpu-pro/lib/xorg/* ${D}/usr/lib64/xorg/
 
-		rm -r ${S}/opt/amdgpu-pro/lib/xorg
+		#rm -r ${S}/opt/amdgpu-pro/lib/xorg
 
-	    dodir "/usr/lib64/opengl/amdgpu-pro/lib"
-		dodir "/etc/X11/xorg.conf.d"
+	    #dodir "/usr/lib64/opengl/amdgpu-pro/lib"
+		#dodir "/etc/X11/xorg.conf.d"
 		
-		cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/gbm/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
-		cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/*     ${D}/usr/lib64/opengl/amdgpu-pro/lib
-		#cp -d ${S}/usr/share/X11/xorg.conf.d/*               ${D}/etc/X11/xorg.conf.d/
-		cp ${FILESDIR}/10-amdgpu-pro.conf					 ${D}/etc/X11/xorg.conf.d/
+		#cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/gbm/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
+		#cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/*     ${D}/usr/lib64/opengl/amdgpu-pro/lib
+		cp -d ${S}/usr/share/X11/xorg.conf.d/*               ${D}/etc/X11/xorg.conf.d/
+		#cp ${FILESDIR}/10-amdgpu-pro.conf					 ${D}/etc/X11/xorg.conf.d/
 
 		rm -rf ${S}/usr/share/X11
 	fi
@@ -262,74 +274,38 @@ src_install() {
     	unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/libgbm1-amdgpu-pro_${BUILD_VER}_i386.deb"
 		unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/xserver-xorg-video-amdgpu-pro_${X11_VIDEO_VER}_i386.deb"
 
-		cp -dR ${S}/opt/amdgpu-pro/lib/xorg/* ${D}/usr/lib32/xorg/
+		#cp -dR ${S}/opt/amdgpu-pro/lib/xorg/* ${D}/usr/lib32/xorg/
 
-		rm -r ${S}/opt/amdgpu-pro/lib/xorg
+		#rm -r ${S}/opt/amdgpu-pro/lib/xorg
 
-	    dodir "/usr/lib32/opengl/amdgpu-pro/lib"
-		dodir "/etc/X11/xorg.conf.d"
+	    #dodir "/usr/lib32/opengl/amdgpu-pro/lib"
+		#dodir "/etc/X11/xorg.conf.d"
 		
-    	cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/gbm/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
-    	cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/*     ${D}/usr/lib32/opengl/amdgpu-pro/lib
-		#cp -d ${S}/usr/share/X11/xorg.conf.d/*             ${D}/etc/X11/xorg.conf.d/
-		cp ${FILESDIR}/10-amdgpu-pro.conf				   ${D}/etc/X11/xorg.conf.d/
+    	#cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/gbm/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
+    	#cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/*     ${D}/usr/lib32/opengl/amdgpu-pro/lib
+		cp -d ${S}/usr/share/X11/xorg.conf.d/*             ${D}/etc/X11/xorg.conf.d/
+		#cp ${FILESDIR}/10-amdgpu-pro.conf				   ${D}/etc/X11/xorg.conf.d/
 
 		rm -rf ${S}/usr/share/X11
 	fi
 
-    rm -rf ${S}/usr/lib
+    #rm -rf ${S}/usr/lib
 
 	rm -rf ${S}/amdgpu-pro-${BUILD_VER}
 
 	# Hack for libGL.so hardcoded directory path for amdgpu_dri.so
-	if use amd64 ; then
-		dodir "/usr/lib/x86_64-linux-gnu/dri"
-		dosym /usr/lib64/dri/amdgpu_dri.so /usr/lib/x86_64-linux-gnu/dri/amdgpu_dri.so
-	fi
+	#if use amd64 ; then
+		#dodir "/usr/lib/x86_64-linux-gnu/dri"
+		#dosym /usr/lib64/dri/amdgpu_dri.so /usr/lib/x86_64-linux-gnu/dri/amdgpu_dri.so
+	#fi
 
-	if use x86 ; then
-    	dodir "/usr/lib/i386-linux-gnu/dri"
-	    dosym /usr/lib32/dri/amdgpu_dri.so /usr/lib/i386-linux-gnu/dri/amdgpu_dri.so
+	#if use x86 ; then
+    	#dodir "/usr/lib/i386-linux-gnu/dri"
+	    #dosym /usr/lib32/dri/amdgpu_dri.so /usr/lib/i386-linux-gnu/dri/amdgpu_dri.so
 
-	fi
+	#fi
 
-	#binaries
-    dodir "/usr/bin"
-    cp -dR ${S}/opt/amdgpu-pro/bin/* ${D}/usr/bin/
-
-	#Includes
-    dodir "/usr/include"
-    cp -dR ${S}/opt/amdgpu-pro/include/* ${D}/usr/include/
-	
-	#conflicts with mesa
-	rm ${D}/usr/include/gbm.h
-
-	#conflicts with eselect-opencl
-	rm -rf ${D}/usr/include/CL
-
-	#conflicts with third-party libdrm
-	rm -rf ${D}/usr/include/libdrm
-	rm -rf ${D}/usr/include/libkms/libkms.h
-    rm -rf ${D}/usr/include/xf86drm.h
-    rm -rf ${D}/usr/include/xf86drmMode.h
-
-	rm -rf ${S}/lib
-
-	if use radeon ; then
-	     if use amd64 ; then
-		     dosym /usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so.1.0.1 /usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so
-			 dodir "/usr/lib64/dri/" 
-			 cp ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/dri/radeonsi_drv_video.so ${D}/usr/lib64/dri/radeonsi_drv_video.so
-		 fi	 
-
-		 if use x86 ; then
-		     dosym /usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so.1.0.1 /usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so
-			 dodir "/usr/lib32/dri/" 
-			 cp ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/dri/radeonsi_drv_video.so ${D}/usr/lib32/dri/radeonsi_drv_video.so
-		 fi	 
-    fi
-
-    rm -rf ${S}/opt/
+    #rm -rf ${S}/opt/
 	cp -dR -t "${D}" * || die "Install failed!"
 }
 
