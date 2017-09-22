@@ -21,7 +21,7 @@ SRC_URI="https://www2.ati.com/drivers/linux/ubuntu/${PN}-${BUILD_VER}.tar.xz"
 
 RESTRICT="fetch strip"
 
-IUSE="gles2 opencl +opengl vdpau +vulkan +rocm +rocr +roct"
+IUSE="gles2 opencl +opengl vdpau +vulkan radeon +rocm +rocr +roct"
 
 LICENSE="AMD GPL-2 QPL-1.0"
 KEYWORDS="~amd64 ~x86"
@@ -39,7 +39,7 @@ RDEPEND="
 	vulkan? (
 		media-libs/vulkan-base
 	)
-	x11-drivers/ati-drivers
+	!x11-drivers/ati-drivers
 "
 
 DEPEND="${RDEPEND}
@@ -113,6 +113,25 @@ src_install() {
 	    	unpack_deb "${S}/amdgpu-pro-${BUILD_VER}/roct-amdgpu-pro_${ROCT_VER}_amd64.deb"
 		fi	
 	fi
+
+    ## Remove symlink to nonexistent point
+    if use amd64 ; then
+        rm -rf ${S}/usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so
+	fi
+
+    if use x86 ; then
+        rm -rf ${S}/usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so
+	fi
+
+	if use radeon ; then
+	     if use amd64 ; then
+		     dosym /usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so.1.0.1 /usr/lib64/opengl/amdgpu-pro/lib/libdrm_radeon.so
+		 fi	 
+
+		 if use x86 ; then
+		     dosym /usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so.1.0.1 /usr/lib32/opengl/amdgpu-pro/lib/libdrm_radeon.so
+		 fi	 
+    fi
 
 	if use opencl ; then # Check opencl
 		if use amd64 ; then
@@ -238,15 +257,12 @@ src_install() {
 	    dodir "/usr/lib64/opengl/amdgpu-pro/lib"
 		dodir "/etc/X11/xorg.conf.d"
 		
-		# Default to X.org 1.18
-		#ln -s ${D}/usr/lib64/xorg/amdgpu-pro/1.18/modules/drivers    ${D}/usr/lib64/opengl/amdgpu-pro/drivers
-		#ln -s ${D}/usr/lib64/xorg/amdgpu-pro/1.18/modules/extensions ${D}/usr/lib64/opengl/amdgpu-pro/extensions
-
 		cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/gbm/* ${D}/usr/lib64/opengl/amdgpu-pro/lib
 		cp -d ${S}/opt/amdgpu-pro/lib/x86_64-linux-gnu/*     ${D}/usr/lib64/opengl/amdgpu-pro/lib
-		cp -d ${S}/usr/share/X11/xorg.conf.d/*               ${D}/etc/X11/xorg.conf.d/
+		#cp -d ${S}/usr/share/X11/xorg.conf.d/*               ${D}/etc/X11/xorg.conf.d/
+		cp ${FILESDIR}/10-amdgpu-pro.conf					 ${D}/etc/X11/xorg.conf.d/
 
-		rm -rf ${S}/usr/share/X11
+		#rm -rf ${S}/usr/share/X11
 	fi
 
 	if use x86 ; then
@@ -265,30 +281,28 @@ src_install() {
 	    dodir "/usr/lib32/opengl/amdgpu-pro/lib"
 		dodir "/etc/X11/xorg.conf.d"
 		
-		# Default to X.org 1.18
-		#ln -s ${D}/usr/lib32/xorg/amdgpu-pro/1.18/modules/drivers    ${D}/usr/lib32/opengl/amdgpu-pro/drivers
-		#ln -s ${D}/usr/lib32/xorg/amdgpu-pro/1.18/modules/extensions ${D}/usr/lib32/opengl/amdgpu-pro/extensions
-
     	cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/gbm/* ${D}/usr/lib32/opengl/amdgpu-pro/lib
     	cp -d ${S}/opt/amdgpu-pro/lib/i386-linux-gnu/*     ${D}/usr/lib32/opengl/amdgpu-pro/lib
-		cp -d ${S}/usr/share/X11/xorg.conf.d/*             ${D}/etc/X11/xorg.conf.d/
+		#cp -d ${S}/usr/share/X11/xorg.conf.d/*             ${D}/etc/X11/xorg.conf.d/
+		cp ${FILESDIR}/10-amdgpu-pro.conf				   ${D}/etc/X11/xorg.conf.d/
 
-		rm -rf ${S}/usr/share/X11
-
-	    rm -rf ${S}/usr/lib
+		#rm -rf ${S}/usr/share/X11
 	fi
+
+    rm -rf ${S}/usr/lib
 
 	rm -rf ${S}/amdgpu-pro-${BUILD_VER}
 
 	# Hack for libGL.so hardcoded directory path for amdgpu_dri.so
 	if use amd64 ; then
 		dodir "/usr/lib/x86_64-linux-gnu/dri"
-		ln -s ${S}/../../../lib64/dri/amdgpu_dri.so ${D}/usr/lib/x86_64-linux-gnu/dri/amdgpu_dri.so
+		dosym /usr/lib64/dri/amdgpu_dri.so /usr/lib/x86_64-linux-gnu/dri/amdgpu_dri.so
 	fi
 
 	if use x86 ; then
     	dodir "/usr/lib/i386-linux-gnu/dri"
-	    ln -s ${S}/../../../lib32/dri/amdgpu_dri.so ${D}/usr/lib/i386-linux-gnu/dri/amdgpu_dri.so
+	    dosym /usr/lib32/dri/amdgpu_dri.so /usr/lib/i386-linux-gnu/dri/amdgpu_dri.so
+
 	fi
 
     rm -rf ${S}/opt/
