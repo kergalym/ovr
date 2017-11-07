@@ -1,0 +1,10 @@
+--- a/bin/libqtile/widget/__init__.py	2016-05-25 11:19:24.000000000 +0600
++++ b/bin/libqtile/widget/__init__.py	2017-11-07 05:14:42.194103691 +0600
+@@ -60,6 +60,7 @@
+ safe_import(".maildir", "Maildir")
+ safe_import(".notify", "Notify")
+ safe_import(".prompt", "Prompt")
++safe_import(".rgpusensors", "RGPUThermalSensor")
+ safe_import(".sensors", "ThermalSensor")
+ safe_import(".sep", "Sep")
+ safe_import(".she", "She")
