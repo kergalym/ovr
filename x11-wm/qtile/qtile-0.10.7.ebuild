@@ -42,7 +42,7 @@ DEPEND="${RDEPEND}
 RESTRICT="test"
 
 src_prepare() {	
-	epatch "${FILESDIR}"/$PN-new-module-rgpusensors.patch
+	epatch "${FILESDIR}"/$PN-new-sensors.patch
 	eapply_user
 }
 
@@ -57,12 +57,18 @@ python_install_all() {
 	# installing RGPUThermalSensors for Python 2.7, 3.4 and 3.5
 	insinto /usr/lib64/python2.7/site-packages/libqtile/widget/
     doins "${FILESDIR}"/rgpusensors.py
+    doins "${FILESDIR}"/chsensors.py
+    doins "${FILESDIR}"/hddsensors.py
 
 	insinto /usr/lib64/python3.4/site-packages/libqtile/widget/
     doins "${FILESDIR}"/rgpusensors.py
+    doins "${FILESDIR}"/chsensors.py
+    doins "${FILESDIR}"/hddsensors.py
 	
 	insinto /usr/lib64/python3.5/site-packages/libqtile/widget/
     doins "${FILESDIR}"/rgpusensors.py
+    doins "${FILESDIR}"/chsensors.py
+    doins "${FILESDIR}"/hddsensors.py
 	
 	insinto /usr/share/xsessions
 	doins resources/qtile.desktop

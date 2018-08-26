@@ -5,7 +5,7 @@
 # Copyright (c) 2014-2015 Sean Vig
 # Copyright (c) 2014 Adi Sieker
 # Copyright (c) 2014 Foster McLane
-# Copyright (c) 2017 Galym Kerimbekov
+# Copyright (c) 2018 Galym Kerimbekov
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -25,83 +25,87 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from os.path import isabs
-from six import PY2
-from . import base
-from ..utils import UnixCommandNotFound, catch_exception_and_warn
 import re
 
+from six import PY2
 
-class HDThermalSensor(base.InLoopPollText):
-    """This widget mostly based on `widget.ThermalSensor()` and use
-    hddtemp to display HDD temperature,
+from . import base
+from ..utils import UnixCommandNotFound, catch_exception_and_warn
+from libqtile.log_utils import logger
 
-    For using this thermal sensor widget you need to have hddtemp installed.
-    You can get a list of the drive_names executing "hddtemp --odgt" in your
-    terminal. Then you can choose which you want, otherwise it will display
-    the first available.
+
+class ChThermalSensor(base.InLoopPollText):
+    """Widget to display temperature sensor information per chip name
+
+    For using the thermal sensor widget you need to have lm-sensors installed.
+    You can get a list of the tag_sensors executing "sensors" in your terminal.
+    Then you can choose which you want, otherwise it will display the first
+    available.
     """
     orientations = base.ORIENTATION_HORIZONTAL
     defaults = [
-        ('drive_name', '/dev/sda',
-            'Full path to the drive. For example: "/dev/sda"'),
-        ('threshold', 60,
-            'If the current temperature value is above, '
-            'then change to foreground_alert colour'),
-        ('foreground_alert', 'ff0000', 'Foreground colour alert'),
+        ('metric', True, 'True to use metric/C, False to use imperial/F'),
+        ('show_tag', False, 'Show tag sensor'),
         ('update_interval', 2, 'Update interval in seconds'),
+        ('chip', None,
+         'Chip name for the temperature sensor.'
+         'For example: "coretemp-isa-0000" or "amdgpu-pci-0200"'),
+        ('tag_sensor', None,
+            'Tag of the temperature sensor. For example: "temp1" or "Core 0"'),
+        (
+            'threshold',
+            70,
+            'If the current temperature value is above, '
+            'then change to foreground_alert colour'
+        ),
+        ('foreground_alert', 'ff0000', 'Foreground colour alert'),
     ]
 
     def __init__(self, **config):
         base.InLoopPollText.__init__(self, **config)
-        self.add_defaults(HDThermalSensor.defaults)
-        """<drive name>, <describe>, <temp value>, <Celcius>
-        """
+        self.add_defaults(ChThermalSensor.defaults)
         self.sensors_temp = re.compile(
-            (r"(.*): (.*): ([ \d]+)({degrees}[C]+)"
+            (r"\n([\w ]+):"  # Sensor tag name
+             r"\s+[+|-]"     # temp signed
+             r"(\d+\.\d+)"   # temp value
+             u"({degrees}"   # degree symbol match
+             u"[C|F])"       # Celsius or Fahrenheit
              ).format(degrees=u"\xc2\xb0" if PY2 else u"\xb0"),
             re.UNICODE | re.VERBOSE
         )
-        self.value_temp = re.compile("\d+")
+        self.value_temp = re.compile("\d+\.\d+")
         temp_values = self.get_temp_sensors()
         self.foreground_normal = self.foreground
 
         if temp_values is None:
-            self.data = "hddtemp command not found"
+            self.data = "sensors command not found"
         elif len(temp_values) == 0:
             self.data = "Temperature sensors not found"
-        elif self.drive_name is None:
+        elif self.tag_sensor is None:
             for k in temp_values:
-                self.drive_name = k
+                self.tag_sensor = k
                 break
 
     @catch_exception_and_warn(warning=UnixCommandNotFound, excepts=OSError)
     def get_temp_sensors(self):
-        """calls the `hddtemp` command with `/dev/sda` arg, so
-        the output should be read.
+        """calls the unix `sensors` command with `-f` flag if user has specified that
+        the output should be read in Fahrenheit.
         """
-
-        sensors_out = ''
-
-        if isabs(self.drive_name):
-            command = ["/usr/sbin/hddtemp"]
-            if command and self.drive_name:
-                command.append(str(self.drive_name))
-                sensors_out = self.call_process(command)
-        else:
-            # If we don't have any hard drive just return test output
-            sensors_out = '/dev/sda: WDC WD10EZEX-00RKKA0:  45°C'
+        command = ["sensors", ]
+        if not self.metric:
+            command.append("-f")
+        if self.chip:
+            command.append(self.chip)
+        sensors_out = self.call_process(command)
         return self._format_sensors_output(sensors_out)
 
     def _format_sensors_output(self, sensors_out):
-        """formats output of `hddtemp` command into a dict of
-        {<drive_name>: <device model>: (<temperature>,
-        <temperature symbol>), ..etc..}
+        """formats output of unix `sensors` command into a dict of
+        {<sensor_name>: (<temperature>, <temperature symbol>), ..etc..}
         """
         temperature_values = {}
-        print(self.sensors_temp.findall(sensors_out))
-        for name, model, temp, symbol in self.sensors_temp.findall(
-             sensors_out):
+        logger.info(self.sensors_temp.findall(sensors_out))
+        for name, temp, symbol in self.sensors_temp.findall(sensors_out):
             name = name.strip()
             temperature_values[name] = temp, symbol
         return temperature_values
@@ -111,9 +115,10 @@ class HDThermalSensor(base.InLoopPollText):
         if temp_values is None:
             return False
         text = ""
-        if self.drive_name is not None:
-            text += "".join(temp_values.get(self.drive_name, ['N/A']))
-        temp_value = float(temp_values.get(self.drive_name, [0])[0])
+        if self.show_tag and self.tag_sensor is not None:
+            text = self.tag_sensor + ": "
+        text += "".join(temp_values.get(self.tag_sensor, ['N/A']))
+        temp_value = float(temp_values.get(self.tag_sensor, [0])[0])
         if temp_value > self.threshold:
             self.layout.colour = self.foreground_alert
         else:
