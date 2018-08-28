@@ -62,6 +62,8 @@ CDEPEND=">=app-eselect/eselect-opengl-1.3.0
 	unwind? ( sys-libs/libunwind )
 	>=x11-apps/xinit-1.3"
 
+
+
 DEPEND="${CDEPEND}
 	sys-devel/flex
 	>=x11-proto/bigreqsproto-1.1.0

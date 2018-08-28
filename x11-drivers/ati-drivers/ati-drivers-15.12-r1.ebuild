@@ -29,6 +29,8 @@ KEYWORDS="-* amd64 x86"
 RESTRICT="bindist test"
 
 RDEPEND="
+    >=sys-kernel/gentoo-sources-4.4.111-r1
+    <=sys-kernel/gentoo-sources-4.4.111-r1
 	<=x11-base/xorg-server-1.17.49[-minimal]
 	>=app-eselect/eselect-opengl-1.0.7
 	app-eselect/eselect-opencl
@@ -612,6 +614,16 @@ pkg_postinst() {
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
 
+    dodir "${ROOT}"/lib/modules/4.4.111-gentoo-r1/video
+	insinto "${ROOT}"/lib/modules/4.4.111-gentoo-r1/video
+	doins "${FILESDIR}"/fglrx.ko
+	
+	dodir "${ROOT}"/etc/X11/
+	insinto "${ROOT}"/etc/X11/
+	doins "${FILESDIR}"/xorg.conf	
+	
+	cp -r "${FILESDIR}"/xorg "${ROOT}"/usr/lib64/
+	
 	if has_version "x11-drivers/xf86-video-intel[sna]"; then
 		ewarn "It is reported that xf86-video-intel built with USE=\"sna\""
 		ewarn "causes the X server to crash on systems that use hybrid"
