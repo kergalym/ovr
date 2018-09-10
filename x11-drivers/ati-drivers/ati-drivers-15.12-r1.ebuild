@@ -614,13 +614,13 @@ pkg_postinst() {
 	"${ROOT}"/usr/bin/eselect opengl set --use-old ati
 	"${ROOT}"/usr/bin/eselect opencl set --use-old amd
 
-    dodir "${ROOT}"/lib/modules/4.4.111-gentoo-r1/video
-	insinto "${ROOT}"/lib/modules/4.4.111-gentoo-r1/video
-	doins "${FILESDIR}"/fglrx.ko
+    #dodir "${ROOT}"/lib/modules/4.4.111-gentoo-r1/video
+	#insinto "${ROOT}"/lib/modules/4.4.111-gentoo-r1/video
+	#doins "${FILESDIR}"/fglrx.ko
 	
-	dodir "${ROOT}"/etc/X11/
-	insinto "${ROOT}"/etc/X11/
-	doins "${FILESDIR}"/xorg.conf	
+	#dodir "${ROOT}"/etc/X11/
+	#insinto "${ROOT}"/etc/X11/
+	#doins "${FILESDIR}"/xorg.conf	
 	
 	cp -r "${FILESDIR}"/xorg "${ROOT}"/usr/lib64/
 	
