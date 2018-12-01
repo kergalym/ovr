@@ -333,6 +333,7 @@ src_prepare() {
 
 	#epatch "${FILESDIR}/15.12-xstate-fp.patch"
 	#epatch "${FILESDIR}/15.12-kernel-4.13.patch"
+	#epatch "${FILESDIR}/15.12-kernel-4.17.patch"
 	epatch_user
 
 	cd "${MODULE_DIR}"
